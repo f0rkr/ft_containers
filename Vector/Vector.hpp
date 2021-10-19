@@ -6,16 +6,17 @@
 /*   By:  <mashad@student.1337.ma                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 08:11:44 by                   #+#    #+#             */
-/*   Updated: 2021/10/19 08:34:23 by                  ###   ########.fr       */
+/*   Updated: 2021/10/19 10:54:32 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-# include "utils/random_access_iterator.hpp"
-# include "utils/reverse_iterator.hpp"
-# include "utils/iterator_traits.hpp"
+# include "random_access_iterator.hpp"
+# include "reverse_iterator.hpp"
+# include "iterator_traits.hpp"
+# include "../utils/utils.hpp"
 # include <iostream>
 
 namespace ft {
@@ -108,9 +109,6 @@ namespace ft {
 		**	@Constructs an empty container, with no elements.
 		 */
 		explicit Vector(const allocator_type& alloc = allocator_type()): _size(0), _capacity(0) {
-			this->_size = 0;
-			this->_max_size = 0;
-			this->_capacity = 0;
 			_alloc.construct(_container, 0);
 			return ;
 		}
@@ -135,8 +133,15 @@ namespace ft {
 		** @return
 		 */
 		template <class InputIterator>
-			Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+			Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) {
 
+				_size = std::distance(first, last);
+				_capacity= _size;
+				_container = _alloc.allocate(_size);
+				for (int i = 0; first != last; first++) {
+					_alloc.construct(&_container[i], *first);
+					i++;
+				}
 			}
 
 
@@ -251,7 +256,7 @@ namespace ft {
 		 * @return The number of elements in the container. Member type size_type is an unsigned integral type.
 		 */
 		size_type	size() const {
-			return (this->_size);
+			return (_size);
 		}
 
 
@@ -262,7 +267,7 @@ namespace ft {
 		 * is an unsigned integral type.
 		 */
 		size_type	max_size() const {
-			return (std::numeric_limits<value_type>::max());
+			return (_alloc.max_size());
 		}
 
 
@@ -285,9 +290,11 @@ namespace ft {
 		 * Member type value_type is the type of the elements in the container, defined in vector as an alias of the first template parameter (T)
 		 */
 		void 		resize(size_type n, value_type val = value_type()) {
-			if (n < this->_size)
-				return ;
-
+			if (n <= _size) {
+				for (int i = n + 1; i < _size ; i++)
+					_alloc.destroy(&_container[i]);
+				_size = n;
+			}
 		}
 
 
@@ -307,7 +314,7 @@ namespace ft {
 		 * it can hold. Member type size_type is an unsigned integral type.
 		 */
 		size_type	capacity() const {
-			return (this->_capcity);
+			return (_capacity);
 		}
 
 
@@ -335,7 +342,9 @@ namespace ft {
 		 * Member type size_type is an unsigned integral type.
 		 * @return none
 		 */
-		void		reverse(size_type n);
+		void		reverse(size_type n) {
+
+		}
 
 
 		// ___________________________________________________________________ //
@@ -436,10 +445,6 @@ namespace ft {
 		}
 
 
-
-
-
-
 		// ___________________________________________________________________ //
 		// -------------------------    Modifiers   -------------------------- //
 		// ******************************************************************* //
@@ -463,7 +468,9 @@ namespace ft {
 		 * @return none
 		 */
 		template <class InputIterator>
-				void	assign (InputIterator first, InputIterator last);
+				void	assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) {
+
+				}
 
 
 
@@ -484,7 +491,15 @@ namespace ft {
 		 * alias of it's first template parameter (T).
 		 * @return none
 		 */
-		void 			assign (size_type n, const value_type& val);
+		void 			assign (size_type n, const value_type& val) {
+			if (n > _size) {
+				reserve(n);
+			}
+			_size = n;
+			for (size_type i = 0; i < _size ; i++) {
+				_container[i] = val;
+			}
+		}
 
 
 
@@ -501,7 +516,9 @@ namespace ft {
 		 * the container, defined in vector as an alias of it's first template parameter (T).
 		 * @return none
 		 */
-		void 			push_back (const value_type& val);
+		void 			push_back (const value_type& val) {
+			insert(end(), val);
+		}
 
 
 
@@ -516,8 +533,7 @@ namespace ft {
 		 * @return none
 		 */
 		void 			pop_back() {
-			if (this->_size > 0)
-				this->_size--;
+			erase(end());
 		}
 
 
@@ -648,7 +664,8 @@ namespace ft {
 		 * whose content is swapped with that of this container.
 		 * @ return none
 		 */
-		void 			swap (Vector& x);
+		void 			swap (Vector& x) {
+		}
 
 
 		/** Clear content
@@ -680,8 +697,7 @@ namespace ft {
 		 * Member type allocator_type is the type of the allocator used by the container, define in vector
 		 * as an alias of it's second template parameter (Alloc).
 		 */
-		allocator_type		get_allocator() const {
-		}
+		allocator_type		get_allocator() const;
 	};
 
 	// ___________________________________________________________________ //
@@ -720,13 +736,7 @@ namespace ft {
 	}
 	template <class T, class Alloc>
 		bool	operator!= (const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
-			if (lhs._size == rhs._size)
-				return (false);
-			for (int i = 0; i < lhs._size ; i++) {
-				if (lhs._array[i] == rhs._array[i])
-					return (false);
-			}
-			return (true);
+			return (!lhs == rhs);
 		}
 	template <class T, class Alloc>
 		bool 	operator< (const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
@@ -750,23 +760,11 @@ namespace ft {
 		}
 	template <class T, class Alloc>
 		bool 	operator>	(const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
-			if (lhs._size <= rhs._size)
-				return (false);
-			for (int i = 0; i < lhs._size ; i++) {
-				if (lhs._array[i] <= rhs._array[i])
-					return (false);
-			}
-			return (true);
+			return (!lhs >= rhs);
 		}
 	template <class T, class Alloc>
 		bool 	operator>=	(const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs){
-			if (lhs._size < rhs._size)
-				return (false);
-			for (int i = 0; i < lhs._size ; i++) {
-				if (lhs._array[i] < rhs._array[i])
-					return (false);
-			}
-			return (true);
+			return (!lhs < rhs);
 		}
 
 
