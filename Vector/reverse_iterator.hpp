@@ -184,8 +184,15 @@ namespace ft {
 			 * @return The pre-increment return *this.
 			 * the post-increment returns the value *this had before the call.
 			 */
-			reverse_iterator&	operator++();
-			reverse_iterator	operator++(int);
+			reverse_iterator&	operator++() {
+				--_ptr;
+				return *this;
+			}
+			reverse_iterator	operator++(int) {
+				reverse_iterator tmp = *this;
+				--(*this);
+				return (tmp);
+			}
 
 
 			/** @brief Advance iterator
@@ -199,7 +206,9 @@ namespace ft {
 			 * Member type difference_type is an alias of the base iterator's own difference type.
 			 * @return The reverse iterator itself (*this).
 			 */
-			reverse_iterator&	operator+= (difference_type n);
+			reverse_iterator&	operator+= (difference_type n) {
+				*this = *this - n;
+			}
 
 
 
@@ -220,7 +229,7 @@ namespace ft {
 			 * @return An iterator pointing to the element n positions before the currently pointed one.
 			 */
 			reverse_iterator	operator- (difference_type n) const {
-
+				return (_ptr + n)
 			}
 
 
@@ -236,7 +245,8 @@ namespace ft {
 			 * The post-decrement returns the value *this had before the call.
 			 */
 			reverse_iterator&	operator--() {
-
+				++_ptr;
+				return *this;
 			}
 			reverse_iterator	operator--(int) {
 				reverse_iterator tmp = *this;
