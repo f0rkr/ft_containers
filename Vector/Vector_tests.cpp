@@ -845,6 +845,7 @@ void vector_tests(void)
             ualarm(0, 0);
             /*----------------------------------------------------*/
         }
+
         /*------------------------------------------------------------------------------------------*/
         /*------------------ std::vectors ---------------------*/
         std::vector<std::string>    v1(10, "string2");          // fill constructor
@@ -856,8 +857,11 @@ void vector_tests(void)
         /*------------------ ft::vectors ---------------------*/
         ft::Vector<std::string>    ft_v1(10, "string2");
         ft::Vector<std::string>    ft_v2;
+
         ft::Vector<std::string>    ft_v3(ft_v1.begin(), ft_v1.end());
+
         ft::Vector<std::string>    ft_v4(ft_v1);
+
         ft::Vector<std::string>    ft_v5(ft_v1.rbegin(), ft_v1.rend());
         /*----------------------------------------------------*/
         EQUAL(v1.size() == ft_v1.size() && v2.size() == ft_v2.size() 
