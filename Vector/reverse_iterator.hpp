@@ -229,7 +229,7 @@ namespace ft {
 			 * @return An iterator pointing to the element n positions before the currently pointed one.
 			 */
 			reverse_iterator	operator- (difference_type n) const {
-				return (_ptr + n)
+				return (_ptr + n);
 			}
 
 

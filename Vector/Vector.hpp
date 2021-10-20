@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
-/*   Updated: 2021/10/20 12:10:31 by                  ###   ########.fr       */
+/*   Updated: 2021/10/20 12:56:47 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ namespace ft {
 		/** Empty container constructor ( default constructor )
 		**	@Constructs an empty container, with no elements.
 		 */
-		explicit Vector(const allocator_type& alloc = allocator_type()): _container(nullptr), _size(0), _capacity(0) {
+		explicit Vector(const allocator_type& alloc = allocator_type()): _container(nullptr), _size(0), _capacity(0), _alloc(alloc) {
 			_alloc.construct(_container, nullptr);
 			return ;
 		}
@@ -118,7 +118,7 @@ namespace ft {
 		 */
 		explicit Vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(n), _capacity(n * 2), _alloc(alloc) {
 			_container = _alloc.allocate(_capacity);
-			for (int i = 0; i < _size; i++)
+			for (size_type i = 0; i < _size; i++)
 				_alloc.construct(_container + i, val);
 		}
 
@@ -131,9 +131,9 @@ namespace ft {
 		** @return
 		 */
 		template <class InputIterator>
-			Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) {
+			Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()): _alloc(alloc) {
 				_size = std::distance(first, last);
-				_capacity= _size;
+				_capacity= _size * 2;
 				_container = _alloc.allocate(_capacity);
 				for (int i = 0; first != last; first++) {
 					_alloc.construct(&_container[i], *first);
@@ -499,7 +499,7 @@ namespace ft {
 				void	assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) {
 					difference_type dis = std::distance(first, last);
 					size_type position = 0;
-					if (dis > _size)
+					if (dis > static_cast<difference_type>(_size))
 						reserve(dis);
 					for (position = 0; first != last; first++ ) {
 						_alloc.construct(&_container[position++], *first);
@@ -607,7 +607,11 @@ namespace ft {
 		 * exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
 		 */
 		iterator	insert	(iterator position, const value_type& val) {
-
+			(void) position;
+			(void) val;
+			if (_size + 1 > _capacity)
+				reserve(_capacity * 2);
+//			for (size_type i = _size - 1; i )
 		}
 
 
@@ -681,7 +685,9 @@ namespace ft {
 		 */
 		template <class InputIterator>
 				void		insert (iterator position, InputIterator first, InputIterator last) {
-
+					(void) position;
+					(void) first;
+					(void) last;
 				}
 
 
@@ -809,10 +815,10 @@ namespace ft {
 	 */
 	template <class T, class Alloc>
 		bool 	operator== (const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
-			if (lhs._size != rhs._size)
+			if (lhs.size() != rhs.size())
 				return (false);
-			for (int i = 0; i < lhs._size ; i++) {
-				if (lhs._array[i] != rhs._array[i])
+			for (int i = 0; i < lhs.size() ; i++) {
+				if (lhs[i] != rhs[i])
 					return (false);
 			}
 			return (true);
@@ -823,20 +829,20 @@ namespace ft {
 		}
 	template <class T, class Alloc>
 		bool 	operator< (const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
-			if (lhs._size >= rhs._size)
+			if (lhs.size() >= rhs.size())
 				return (false);
-			for (int i = 0; i < lhs._size ; i++) {
-				if (lhs._array[i] >= rhs._array[i])
+			for (int i = 0; i < lhs.size() ; i++) {
+				if (lhs[i] >= rhs[i])
 					return (false);
 			}
 			return (true);
 		}
 	template <class T, class Alloc>
 		bool 	operator<= (const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
-			if (lhs._size > rhs._size)
+			if (lhs.size() > rhs.size())
 				return (false);
-			for (int i = 0; i < lhs._size ; i++) {
-				if (lhs._array[i] > rhs._array[i])
+			for (int i = 0; i < lhs.size() ; i++) {
+				if (lhs[i] > rhs[i])
 					return (false);
 			}
 			return (true);
