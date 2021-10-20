@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   reverse_iterator.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By:  <>                                        +#+  +:+       +#+        */
+/*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/10 10:39:17 by                   #+#    #+#             */
-/*   Updated: 2021/10/16 16:45:09 by                  ###   ########.fr       */
+/*   Created: 2021/10/20 13:02:36 by mashad            #+#    #+#             */
+/*   Updated: 2021/10/20 17:14:57 by mashad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ namespace ft {
 			 * @param none
 			 * @return none
 			 */
-			reverse_iterator() {
-				_ptr = nullptr;
+			reverse_iterator(): _ptr(iterator_type()){
+				return ;
 			}
 
 
@@ -98,7 +98,7 @@ namespace ft {
 			 * @return none
 			 */
 			explicit	reverse_iterator (iterator_type it) {
-				_ptr = static_cast<pointer>(it._ptr);
+				_ptr = --it;
 				return ;
 			}
 
@@ -113,7 +113,9 @@ namespace ft {
 			 * @return none
 			 */
 			template <class Iter>
-					reverse_iterator (const reverse_iterator<Iter>& rev_it);
+					reverse_iterator (const reverse_iterator<Iter>& rev_it) {
+						_ptr = rev_it.base();
+					}
 
 
 
@@ -130,7 +132,10 @@ namespace ft {
 			 * Member type iterator_type is the underlying bidirectional iterator type (the class template
 			 * parameter: Iterator).
 			 */
-			iterator_type	base() const;
+			iterator_type	base() const {
+				iterator_type tmp = _ptr;
+				return (++tmp);
+			}
 
 
 
@@ -171,7 +176,9 @@ namespace ft {
 			 *
 			 * @return An iterator pointing to the element n positions away.
 			 */
-			reverse_iterator	operator+ (difference_type n) const;
+			reverse_iterator	operator+ (difference_type n) const {
+				return (reverse_iterator(_ptr - n + 1));
+			}
 
 
 			/** @brief Increment iterator position
@@ -190,7 +197,7 @@ namespace ft {
 			}
 			reverse_iterator	operator++(int) {
 				reverse_iterator tmp = *this;
-				--(*this);
+				_ptr--;
 				return (tmp);
 			}
 
@@ -207,7 +214,8 @@ namespace ft {
 			 * @return The reverse iterator itself (*this).
 			 */
 			reverse_iterator&	operator+= (difference_type n) {
-				*this = *this - n;
+				_ptr -= n;
+				return (*this);
 			}
 
 
@@ -229,7 +237,7 @@ namespace ft {
 			 * @return An iterator pointing to the element n positions before the currently pointed one.
 			 */
 			reverse_iterator	operator- (difference_type n) const {
-				return (_ptr + n);
+				return (reverse_iterator(_ptr + (n + 1)));
 			}
 
 
@@ -250,7 +258,7 @@ namespace ft {
 			}
 			reverse_iterator	operator--(int) {
 				reverse_iterator tmp = *this;
-				++(*this);
+				++_ptr;
 				return (tmp);
 			}
 
@@ -268,7 +276,7 @@ namespace ft {
 			 * @return The reverse iterator itself (*this)
 			 */
 			reverse_iterator&	operator-= (difference_type n) {
-				_ptr+=n;
+				_ptr += n;
 				return (*this);
 			}
 
@@ -309,7 +317,7 @@ namespace ft {
 			reference			operator[] (difference_type n) const {return (_ptr[n]);}
 
 			protected:
-				pointer	_ptr;
+				iterator_type	_ptr;
 
 	};
 
@@ -331,22 +339,34 @@ namespace ft {
 	 */
 	template <class Iterator>
 		bool operator== (const reverse_iterator<Iterator>& lhs,
-				const reverse_iterator<Iterator>& rhs);
+				const reverse_iterator<Iterator>& rhs) {
+			return (lhs.base() == rhs.base());
+		}
 	template <class Iterator>
 		bool operator!= (const reverse_iterator<Iterator>& lhs,
-				const reverse_iterator<Iterator>& rhs);
+				const reverse_iterator<Iterator>& rhs) {
+			return (lhs.base() != rhs.base());
+		}
 	template <class Iterator>
 		bool operator< (const reverse_iterator<Iterator>& lhs,
-				const reverse_iterator<Iterator>& rhs);
+				const reverse_iterator<Iterator>& rhs) {
+			return (lhs.base() > rhs.base());
+		}
 	template <class Iterator>
 		bool operator<= (const reverse_iterator<Iterator>& lhs,
-				const reverse_iterator<Iterator>& rhs);
+				const reverse_iterator<Iterator>& rhs) {
+			return (lhs.base() >= rhs.base());
+		}
 	template <class Iterator>
 		bool operator> (const reverse_iterator<Iterator>& lhs,
-				const reverse_iterator<Iterator>& rhs);
+				const reverse_iterator<Iterator>& rhs) {
+			return (lhs.base() < rhs.base());
+		}
 	template <class Iterator>
 		bool operator>= (const reverse_iterator<Iterator>& lhs,
-				const reverse_iterator<Iterator>& rhs);
+				const reverse_iterator<Iterator>& rhs) {
+			return (lhs.base() <= rhs.base());
+		}
 
 	/** @brief Addition operator
 	 * Returns a reverse iterator pointing to the element located n positions away from the element
@@ -366,7 +386,9 @@ namespace ft {
 		reverse_iterator<Iterator> operator+ (
 					typename	reverse_iterator<Iterator>::difference_type n,
 					const		reverse_iterator<Iterator>& rev_it
-				);
+				) {
+			return (rev_it + n);
+		}
 
 	/** @brief Subtraction operator
 	 * Returns the distance between lhs and rhs.
@@ -381,6 +403,8 @@ namespace ft {
 	template <class Iterator>
 		typename reverse_iterator<Iterator>::difference_type operator- (
 				const reverse_iterator<Iterator>& lhs,
-				const reverse_iterator<Iterator>& rhs);
+				const reverse_iterator<Iterator>& rhs) {
+			return (rhs.base() - lhs.base());
+		}
 }
 #endif
