@@ -27,7 +27,9 @@ namespace ft {
 		    }
 
 		    reference   operator*() { return *_ptr; };
+		    reference	operator*() const { return *_ptr; };
 		    pointer     operator->() { return _ptr; };
+		    pointer     operator->() const { return _ptr; };
 
 
 
@@ -56,29 +58,30 @@ namespace ft {
 		    random_access_iterator& operator--() { --_ptr; return *this; }
 		    random_access_iterator operator--(int) { random_access_iterator tmp = *this; --(*this); return tmp; }
 
-		    bool    operator!=(const random_access_iterator & it) { return (_ptr != it._ptr); }
-		    bool    operator==(const random_access_iterator & it) { return (_ptr == it._ptr); }
+		    friend bool    operator!=(const random_access_iterator & lhs, const random_access_iterator &rhs)  { return (lhs._ptr != rhs._ptr); }
+		    friend bool    operator==(const random_access_iterator & lhs, const random_access_iterator &rhs)  { return (lhs._ptr == rhs._ptr); }
 
-		    size_t   operator-(random_access_iterator rhs) {return (_ptr - rhs._ptr);}
+		    size_t   operator-(random_access_iterator rhs) const {return (_ptr - rhs._ptr);}
 
-		    random_access_iterator   operator-(int rhs) {return random_access_iterator(_ptr - rhs);}
-		    random_access_iterator   operator+(int rhs) {return random_access_iterator(_ptr + rhs);}
+		    random_access_iterator   operator-(int rhs) const {return random_access_iterator(_ptr - rhs);}
+		    random_access_iterator   operator+(int rhs) const {return random_access_iterator(_ptr + rhs);}
+		    friend random_access_iterator   operator+(int rhs, random_access_iterator it)  {return random_access_iterator(it._ptr + rhs);}
 
-		    bool    operator<(const random_access_iterator & it) { return (_ptr < it._ptr); }
-		    bool    operator>(const random_access_iterator & it) { return (_ptr > it._ptr); }
-		    bool    operator<=(const random_access_iterator & it) { return (_ptr <= it._ptr); }
-		    bool    operator>=(const random_access_iterator & it) { return (_ptr >= it._ptr); }
+		    friend bool    operator<(const random_access_iterator & lhs, const random_access_iterator &rhs) { return (lhs._ptr < rhs._ptr); }
+		    friend bool    operator>(const random_access_iterator & lhs, const random_access_iterator &rhs) { return (lhs._ptr > rhs._ptr); }
+		    friend bool    operator<=(const random_access_iterator & lhs, const random_access_iterator &rhs) { return (lhs._ptr <= rhs._ptr); }
+		    friend bool    operator>=(const random_access_iterator & lhs, const random_access_iterator &rhs) { return (lhs._ptr >= rhs._ptr); }
 
 		    random_access_iterator   operator+=(int rhs) {return (*this = *this + rhs);};
 		    random_access_iterator   operator-=(int rhs) {return (*this = *this - rhs);};
 
-		    reference   operator[](int n) { return _ptr[n]; };
+		    reference   operator[](int n)  const { return _ptr[n]; };
 
 		    operator random_access_iterator<const value_type> () const { return random_access_iterator<const value_type>(_ptr) ; }
 
 		private:
 	    	pointer _ptr;
 };
-
+	
 }
 #endif
