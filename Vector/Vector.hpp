@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By:  <mashad@student.1337.ma                   +#+  +:+       +#+        */
+/*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/22 08:11:44 by                   #+#    #+#             */
-/*   Updated: 2021/10/19 10:54:32 by                  ###   ########.fr       */
+/*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
+/*   Updated: 2021/10/19 14:41:47 by mashad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ namespace ft {
 		/** Empty container constructor ( default constructor )
 		**	@Constructs an empty container, with no elements.
 		 */
-		explicit Vector(const allocator_type& alloc = allocator_type()): _size(0), _capacity(0) {
-			_alloc.construct(_container, 0);
+		explicit Vector(const allocator_type& alloc = allocator_type()): _container(nullptr), _size(0), _capacity(0) {
+			_alloc.construct(_container, nullptr);
 			return ;
 		}
 
@@ -294,6 +294,12 @@ namespace ft {
 				for (int i = n + 1; i < _size ; i++)
 					_alloc.destroy(&_container[i]);
 				_size = n;
+			} else {
+				if (n > _capacity)
+					reserve(n);
+				for (size_type i = n; i < n; i++) {
+					_alloc.construct(&container[i], val);
+				}
 			}
 		}
 
@@ -343,7 +349,16 @@ namespace ft {
 		 * @return none
 		 */
 		void		reverse(size_type n) {
-
+			if (n > _capacity) {
+				pointer tmp = _alloc.allocate(n);
+				for (size_type i = 0; i < _size ; i++) {
+					_alloc.construct(&tmp[i], _container[i]);
+					_alloc.destroy(&container[i]);
+				}
+				_alloc.deallocate(_container, _capacity);
+				_container = tmp;
+				_capacity = n * 2;
+			}
 		}
 
 
@@ -593,7 +608,18 @@ namespace ft {
 		 * @return none. If reallocations happen, the storage is allocated using the container's allocator, which may throw
 		 * exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
 		 */
-		void 		insert	(iterator position, size_type n, const value_type& val);
+		void 		insert	(iterator position, size_type n, const value_type& val) {
+			difference_type index = std::distance(begin(), position);
+
+			if (_size + n > _capacity)
+				reserve(_size + n);
+			for (difference_type i = index ;i < index + n;i++) {
+				_alloc.construct(&_container[i + n], _container[i]);
+				_alloc.construct(&container[i], val);
+			}
+			_size = _size + n;
+			return ;
+		}
 
 
 
@@ -645,8 +671,17 @@ namespace ft {
 		 * @return An iterator pointing to the new location of the element that followed the last element erased by the
 		 * function call. This is the container end if the operation erased the last element in the sequence.
 		 */
-		iterator		erase (iterator position);
-		iterator 		erase (iterator first, iterator last);
+		iterator		erase (iterator position) {
+			
+			for (difference_type i = std::distance(begin(), position); i < _size - 1 ; i++ ) {
+				_alloc.construct(&container[i], _container[i + 1]);
+			}
+			_alloc.destroy(&_container[_size - 1]);
+			_size--;
+		}
+		iterator 		erase (iterator first, iterator last) {
+
+		}
 
 
 
@@ -665,6 +700,10 @@ namespace ft {
 		 * @ return none
 		 */
 		void 			swap (Vector& x) {
+			std::swap(_size, x._size);
+			std::swap(_alloc, x._alloc);
+			std::swap(_capacity, x._capacity);
+			std::swap(_container, x._container);
 		}
 
 
@@ -680,6 +719,9 @@ namespace ft {
 		void 			clear() {
 			if (!this->empty())
 				return;
+			for (size_type i = 0; i < _size; i++) {
+				_alloc.destory(&_container[i]);
+			}
 			this->_size = 0;
 		}
 
@@ -697,7 +739,9 @@ namespace ft {
 		 * Member type allocator_type is the type of the allocator used by the container, define in vector
 		 * as an alias of it's second template parameter (Alloc).
 		 */
-		allocator_type		get_allocator() const;
+		allocator_type		get_allocator() const {
+			return (allocator_type());
+		}
 	};
 
 	// ___________________________________________________________________ //
