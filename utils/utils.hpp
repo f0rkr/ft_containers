@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By:  <>                                        +#+  +:+       +#+        */
+/*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/16 08:40:40 by                   #+#    #+#             */
-/*   Updated: 2021/10/19 09:08:29 by                  ###   ########.fr       */
+/*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
+/*   Updated: 2021/10/20 17:28:36 by mashad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,48 @@ namespace ft {
 	};
 
 
+	template<class lhit, class rhit>
+	bool equal(lhit first1, lhit last1, rhit first2)
+	{
+		while (first1 != last1) {
+		  if (!(*first1 == *first2))
+		    return false;
+		  ++first1; ++first2;
+		}
+		return true;
+	}
+	template <class lhit, class rhit, class BinaryPredicate>
+	bool equal ( lhit first1, lhit last1, rhit first2, BinaryPredicate pred)
+	{
+		while (first1!=last1) {
+		  if (!pred(*first1,*first2))
+		    return false;
+		  ++first1; ++first2;
+		}
+		return true;
+	}
 
+	template <class InputIterator1, class InputIterator2>
+  	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+                                InputIterator2 first2, InputIterator2 last2){
+		while (first1!=last1)
+		{
+		  if (first2==last2 || *first2<*first1) return false;
+		  else if (*first1<*first2) return true;
+		  ++first1; ++first2;
+		}
+		return (first2!=last2);
+	}
+	template <class InputIterator1, class InputIterator2, class Compare>
+  bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+                                InputIterator2 first2, InputIterator2 last2,
+                                Compare comp){
+		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 ) {
+		    if (comp(*first1, *first2)) return true;
+		    if (comp(*first2, *first1)) return false;
+		}
+		return (first1 == last1) && (first2 != last2);
+	}
 	/** @brief Is integral
 	 * Traits class that identifies whether T is an integral type.
 	 *
