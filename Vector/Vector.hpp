@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
-/*   Updated: 2021/10/20 17:29:14 by mashad           ###   ########.fr       */
+/*   Updated: 2021/10/21 18:02:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,7 +306,7 @@ namespace ft {
 				_size = n;
 			} else {
 				if (n > _capacity)
-					reserve(n * 2);
+					reserve(n);
 				for (size_type i = _size; i < n; i++) {
 					_alloc.construct(&_container[i], val);
 				}
@@ -369,7 +369,7 @@ namespace ft {
 				if (_container != nullptr)
 					_alloc.deallocate(_container, _capacity);
 				_container = tmp;
-				_capacity = n * 2;
+				_capacity = n;
 			}
 		}
 
@@ -496,7 +496,7 @@ namespace ft {
 		 */
 		template <class InputIterator>
 				void	assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) {
-					size_type dis = static_cast<size_type>(std::distance(first, last));
+					size_type dis = std::distance(first, last);
 					size_type position = 0;
 					if (dis > _size)
 						reserve(dis);
@@ -603,15 +603,22 @@ namespace ft {
 		 */
 		iterator	insert	(iterator position, const value_type& val) {
 			difference_type dis = std::distance(begin(), position);
-                if (_size == 0)
-                    reserve(1);
-                else if (_size + 1 > _capacity)
-                    reserve(_capacity * 2);
-                for (size_type i = dis + 1; i <= _size; i++)
-                    std::swap(_container[dis], _container[i]);
-                _alloc.construct(&_container[dis], val);
-                _size++;
-                return (begin() + dis);
+			if (_size == 0)
+				reserve(1);
+			else if (_size + 1 > _capacity)
+				reserve(_capacity * 2);
+			if (_size == 0)
+				_alloc.construct(&_container[_size++], val);
+			else {
+				value_type tmp = _container[dis];
+				_alloc.construct(&_container[dis], val);
+				for (size_type i = _size - 1 ; i > dis ; i--) {
+					_alloc.construct(&_container[i + 1], _container[i]);
+				}
+				_alloc.construct(&_container[dis + 1], tmp);
+				_size++;
+			}
+			return (begin() + dis);
 		}
 
 
@@ -643,14 +650,22 @@ namespace ft {
 		 * exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
 		 */
 		void 		insert	(iterator position, size_type n, const value_type& val) {
-			difference_type index = std::distance(begin(), position);
+			size_type	InsertBegin = std::distance(begin(), position);
+			size_type	counter = 0;
 
+			if (_size == 0)
+				reserve(1);
 			if (_size + n > _capacity)
 				reserve(_size + n);
-			for (difference_type i = index ;i < index + n;i++) {
-				_alloc.construct(&_container[i + n], _container[i]);
-				_alloc.construct(&_container[i], val);
+			pointer NewContainer = _alloc.allocate(_capacity);
+			for (size_type i = 0 ;i < InsertBegin;i++) {
+				_alloc.construct(&NewContainer[i], _container[counter++]);
 			}
+			for (size_type i = InsertBegin ; i < InsertBegin + n ;i++ ){
+				_alloc.construct(&NewContainer[i], val);
+				_alloc.construct(&NewContainer[i + n], _container[counter++]);
+			}
+			_container = NewContainer;
 			_size = _size + n;
 			return ;
 		}
@@ -684,14 +699,29 @@ namespace ft {
 		 * exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
 		 */
 		template <class InputIterator>
-				void		insert (iterator position, InputIterator first, InputIterator last) {
-					(void) position;
-					(void) first;
-					(void) last;
+				void		insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) {
+					// TO-DO: Insert values from InputIterator first to last into container.
+					size_type InsertionBegin = std::distance(begin(), position);
+					size_type InsertionEnd = std::distance(position, end());
+					size_type InsertDistance = std::distance(first, last);
+
+					if (_size == 0)
+						reserve(1);
+					if (_size + InsertDistance > _capacity)
+						reserve(_capacity * 2);
+					pointer newContainer = _alloc.allocate(_size + InsertDistance);
+					for (size_type i = 0; i < InsertionBegin;i++) {
+						_alloc.construct(&newContainer[i], _container[i]);
+					}
+					for (size_type i = InsertionBegin ; i < InsertionBegin + InsertDistance ; i++) {
+						_alloc.construct(&newContainer[i], *first++);
+					}
+					size_type j = InsertionBegin + InsertDistance;
+					for (size_type i = InsertionBegin + InsertDistance ; i < _size + InsertDistance && j < InsertionEnd; i++) {
+						_alloc.construct(&newContainer[i], _container[j++]);
+					}
+					_container = newContainer;
 				}
-
-
-
 
 		/** Erase elements
 		 * Removes from the vector either a single element (position) or a range of elements ([first, last]).
@@ -718,13 +748,15 @@ namespace ft {
 		}
 		iterator 		erase (iterator first, iterator last) {
 			// TO-DO: Destroy elements from first to last.
-			difference_type start = std::distance(begin(), first);
-			difference_type index = std::distance(last, end());
-			for (difference_type i = start; i <  index + start ; i++) {
-				_alloc.construct(&_container[i], _container[i + index]);
-				_alloc.destroy(&_container[i + index]);
+			size_type EraseDistance = std::distance(first, last);
+			size_type EraseBegin = std::distance(begin(), first);
+			size_type EraseEnd = std::distance(begin(), last);
+
+			for (size_type i = EraseBegin ; i < EraseEnd ; i++) {
+				_alloc.construct(&_container[i], _container[i + EraseDistance - 1]);
+//				_alloc.destroy(&_container[i + EraseDistance]);
 			}
-			_size = _size - std::distance(first, last);
+			_size = _size - EraseDistance;
 			return (last + 1);
 		}
 
@@ -762,12 +794,12 @@ namespace ft {
 		 * @return none
 		 */
 		void 			clear() {
-			if (!this->empty())
+			if (!empty())
 				return;
 			for (size_type i = 0; i < _size; i++) {
 				_alloc.destroy(&_container[i]);
 			}
-			this->_size = 0;
+			_size = 0;
 		}
 
 
