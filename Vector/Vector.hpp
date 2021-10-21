@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
-/*   Updated: 2021/10/20 17:22:07 by mashad           ###   ########.fr       */
+/*   Updated: 2021/10/20 17:29:14 by mashad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -817,7 +817,7 @@ namespace ft {
 		bool 	operator== (const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
 			if (lhs.size() != rhs.size())
             	return (lhs.size() == rhs.size());
-        	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+        	return (std::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 	template <class T, class Alloc>
 		bool	operator!= (const Vector<T, Alloc>& lhs, const Vector<T,Alloc>& rhs) {
