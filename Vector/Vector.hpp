@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
-/*   Updated: 2021/10/21 18:02:04 by                  ###   ########.fr       */
+/*   Updated: 2021/10/23 13:16:30 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ namespace ft {
 		** @Construct a container with a copy of each of the elements in x, in the same order.
 		** @param x A vector object of the same type (i.e., with the same template parameters, T and Alloc)
 		 */
-		Vector(const Vector &x): _container(nullptr) , _capacity(0), _size(0) {
+		Vector(const Vector &x): _container(nullptr), _size(0) , _capacity(0) {
 			*this = x;
 			return ;
 		}
@@ -301,7 +301,7 @@ namespace ft {
 		 */
 		void 		resize(size_type n, value_type val = value_type()) {
 			if (n <= _size) {
-				for (int i = n + 1; i < _size ; i++)
+				for (size_type i = n + 1; i < _size ; i++)
 					_alloc.destroy(&_container[i]);
 				_size = n;
 			} else {
@@ -362,11 +362,11 @@ namespace ft {
 		void		reserve(size_type n) {
 			if (n > _capacity) {
 				pointer tmp = _alloc.allocate(n);
-				for (size_type i = 0; i < _size && _container != nullptr ; i++) {
+				for (size_type i = 0; i < _size ; i++) {
 					_alloc.construct(&tmp[i], _container[i]);
 					_alloc.destroy(&_container[i]);
 				}
-				if (_container != nullptr)
+				if (_capacity != 0)
 					_alloc.deallocate(_container, _capacity);
 				_container = tmp;
 				_capacity = n;
@@ -554,7 +554,12 @@ namespace ft {
 		 * @return none
 		 */
 		void 			push_back (const value_type& val) {
-			insert(end(), val);
+			if (_size == 0)
+				reserve(1);
+			if (_size + 1 > _capacity)
+				reserve(_capacity * 2);
+			_alloc.construct(&_container[_size], val);
+			_size++;
 		}
 
 
@@ -602,7 +607,8 @@ namespace ft {
 		 * exceptions on failure (for the default allocator, bad_alloc is thrown if the allocation request does not succeed).
 		 */
 		iterator	insert	(iterator position, const value_type& val) {
-			difference_type dis = std::distance(begin(), position);
+			size_type dis = std::distance(begin(), position);
+
 			if (_size == 0)
 				reserve(1);
 			else if (_size + 1 > _capacity)
@@ -651,23 +657,26 @@ namespace ft {
 		 */
 		void 		insert	(iterator position, size_type n, const value_type& val) {
 			size_type	InsertBegin = std::distance(begin(), position);
-			size_type	counter = 0;
 
-			if (_size == 0)
-				reserve(1);
-			if (_size + n > _capacity)
-				reserve(_size + n);
-			pointer NewContainer = _alloc.allocate(_capacity);
-			for (size_type i = 0 ;i < InsertBegin;i++) {
-				_alloc.construct(&NewContainer[i], _container[counter++]);
+			if (_size + n > _capacity) {
+				if (n > _size)
+					reserve(_size + n);
+				else
+					reserve(_capacity * 2);
 			}
-			for (size_type i = InsertBegin ; i < InsertBegin + n ;i++ ){
-				_alloc.construct(&NewContainer[i], val);
-				_alloc.construct(&NewContainer[i + n], _container[counter++]);
+			if (_size == 0) {
+				for (size_type i = 0; i < n ; i++) {
+					_alloc.construct(&_container[i], val);
+				}
+			} else {// Insert near the end
+				for (size_type i =  _size - 1 ; i >= InsertBegin; i--) {
+					_alloc.construct(&_container[i + n], _container[i]);
+				}
+				for (size_type i = 0 ; i < n ; i++) {
+					_alloc.construct(&_container[InsertBegin + i], val);
+				}
 			}
-			_container = NewContainer;
 			_size = _size + n;
-			return ;
 		}
 
 
@@ -701,26 +710,30 @@ namespace ft {
 		template <class InputIterator>
 				void		insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) {
 					// TO-DO: Insert values from InputIterator first to last into container.
-					size_type InsertionBegin = std::distance(begin(), position);
-					size_type InsertionEnd = std::distance(position, end());
-					size_type InsertDistance = std::distance(first, last);
+					size_type	InsertBegin = std::distance(begin(), position);
+					size_type	InsertEnd = std::distance(position, end());
+					size_type	n = std::distance(first, last);
 
-					if (_size == 0)
-						reserve(1);
-					if (_size + InsertDistance > _capacity)
-						reserve(_capacity * 2);
-					pointer newContainer = _alloc.allocate(_size + InsertDistance);
-					for (size_type i = 0; i < InsertionBegin;i++) {
-						_alloc.construct(&newContainer[i], _container[i]);
+
+					if (_size + n > _capacity) {
+						if (n > _size)
+							reserve(_size + n);
+						else
+							reserve(_capacity * 2);
 					}
-					for (size_type i = InsertionBegin ; i < InsertionBegin + InsertDistance ; i++) {
-						_alloc.construct(&newContainer[i], *first++);
+					if (_size == 0) {
+						for (size_type i = 0; i < n ; i++, ++first) {
+							_alloc.construct(&_container[i], *first);
+						}
+					} else  {// Insert near the end
+						for (size_type i =  _size ; i >= InsertEnd ; i--) {
+							_alloc.construct(&_container[i + n], _container[i]);
+						}
+						for (size_type i = 0; i < n ; i++ , ++first) {
+							_alloc.construct(&_container[InsertBegin + i], *first);
+						}
 					}
-					size_type j = InsertionBegin + InsertDistance;
-					for (size_type i = InsertionBegin + InsertDistance ; i < _size + InsertDistance && j < InsertionEnd; i++) {
-						_alloc.construct(&newContainer[i], _container[j++]);
-					}
-					_container = newContainer;
+					_size = _size + n;
 				}
 
 		/** Erase elements
@@ -739,7 +752,7 @@ namespace ft {
 		 * function call. This is the container end if the operation erased the last element in the sequence.
 		 */
 		iterator		erase (iterator position) {
-			for (difference_type i = std::distance(begin(), position); i < _size - 1 ; i++ ) {
+			for (size_type i = std::distance(begin(), position); i < _size - 1 ; i++ ) {
 				_alloc.construct(&_container[i], _container[i + 1]);
 			}
 			_alloc.destroy(&_container[_size - 1]);
@@ -750,14 +763,13 @@ namespace ft {
 			// TO-DO: Destroy elements from first to last.
 			size_type EraseDistance = std::distance(first, last);
 			size_type EraseBegin = std::distance(begin(), first);
-			size_type EraseEnd = std::distance(begin(), last);
 
-			for (size_type i = EraseBegin ; i < EraseEnd ; i++) {
-				_alloc.construct(&_container[i], _container[i + EraseDistance - 1]);
-//				_alloc.destroy(&_container[i + EraseDistance]);
+			for (size_type i = 0; i < EraseDistance ; i++ ) {
+				_alloc.construct(&_container[EraseBegin + i], _container[--_size]);
 			}
-			_size = _size - EraseDistance;
-			return (last + 1);
+			for (size_type i = 0 ; i > EraseDistance ; i++)
+				_alloc.destroy(&_container[EraseBegin + i]);
+			return (first);
 		}
 
 
@@ -794,8 +806,6 @@ namespace ft {
 		 * @return none
 		 */
 		void 			clear() {
-			if (!empty())
-				return;
 			for (size_type i = 0; i < _size; i++) {
 				_alloc.destroy(&_container[i]);
 			}
