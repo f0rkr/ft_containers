@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
-/*   Updated: 2021/10/20 17:28:36 by mashad           ###   ########.fr       */
+/*   Updated: 2021/10/25 08:06:58 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,22 +56,24 @@ namespace ft {
                                 InputIterator2 first2, InputIterator2 last2){
 		while (first1!=last1)
 		{
-		  if (first2==last2 || *first2<*first1) return false;
-		  else if (*first1<*first2) return true;
+		  if (first2==last2 || *first2<*first1)
+			  return false;
+		  else if (*first1<*first2)
+			  return true;
 		  ++first1; ++first2;
 		}
 		return (first2!=last2);
 	}
 	template <class InputIterator1, class InputIterator2, class Compare>
-  bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
-                                InputIterator2 first2, InputIterator2 last2,
-                                Compare comp){
-		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 ) {
-		    if (comp(*first1, *first2)) return true;
-		    if (comp(*first2, *first1)) return false;
-		}
-		return (first1 == last1) && (first2 != last2);
-	}
+		  bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+										InputIterator2 first2, InputIterator2 last2,
+										Compare comp){
+				for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 ) {
+					if (comp(*first1, *first2)) return true;
+					if (comp(*first2, *first1)) return false;
+				}
+				return (first1 == last1) && (first2 != last2);
+			}
 	/** @brief Is integral
 	 * Traits class that identifies whether T is an integral type.
 	 *
@@ -101,4 +103,42 @@ namespace ft {
 	template <> struct is_integral<unsigned int> {static const bool value = true;};
 	template <> struct is_integral<unsigned long int> {static const bool value = true;};
 	template <> struct is_integral<unsigned long long int> {static const bool value = true;};
+
+	/** @brief Binary function object base class
+	 * This is a base class for standard binary function objects.
+	 *
+	 * Generically, function objects are instances of a class with member function operator() defined. This member
+	 * function allows the object to be used with the same syntax as a regular function call, and therefore it's type
+	 * can be used as template parameter when a generic function type is expected.
+	 *
+	 * In the case of binary function object, this operator() member function takes two parameters.
+	 *
+	 * binary_function is just a base class, from which specific binary function object are derived. It has no operator()
+	 * member defined (which derived classes are expected to define) - it simply has three public data members that are
+	 * typedefs of the template parameters.
+	 *
+	 * @tparam Arg1 Type of the first argument in member operator()
+	 * @tparam Arg2  Type of second argument in member operator()
+	 * @tparam Result  Type returned by member operator()
+	 */
+	template <class Arg1, class Arg2, class Result>
+		struct binary_function {
+			typedef Arg1	first_argument_type;
+			typedef Arg2	second_argument_type;
+			typedef Result	result_type;
+		};
+
+	/** @brief Function object class for less-than inequality comparison
+	 * Binary function object class whose call returns whether it's first argument compares less than the second ( as
+	 * returned by operator < ).
+	 *
+	 * Generically, function objects are instances of a class with member function operator() defined. This member function
+	 * allows the object to be used with the same syntax as a function call.
+	 *
+	 * @tparam T Type of the arguments to compare by the functional call
+	 */
+	template <class T> struct less : binary_function <T,T,bool> {
+		bool operator() (const T& x, const T& y) const {return x<y;}
+	};
+
 }
