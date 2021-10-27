@@ -26,7 +26,7 @@ namespace ft {
 	 ** elements are stored. It's value_type shall be T.
 	 ** Aliased as member type stack::container_type.
 	*/
-	template <class T, class Container = ft::Vector<T, class   = allocator<T> > >
+	template <class T, class Container = ft::Vector<T, class   = allocator<T> >>>
 			class Stack {
 				private:
 					Container	*_cntr;
