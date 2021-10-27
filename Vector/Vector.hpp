@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
-/*   Updated: 2021/10/23 13:16:30 by                  ###   ########.fr       */
+/*   Updated: 2021/10/27 13:56:25 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ namespace ft {
 		/**
 		 * @reverse_iterator<const_iterator>
 		 */
-		typedef typename ft::reverse_iterator<iterator>		const_reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
 
 		/**
 		 * A signed integral type, identical to: iterator_traits<iterator>::difference_type
@@ -177,6 +177,11 @@ namespace ft {
 		Vector&			operator= (const Vector& x) {
 			if (_capacity < x._capacity || _container == nullptr)
 				reserve(x._capacity);
+			if (_container != nullptr) {
+				for (size_type i = 0; i < _size ; i++) {
+					_alloc.destroy(&_container[i]);
+				}
+			}
 			_size = x._size;
 			_alloc = x._alloc;
 			_capacity = x._capacity;
