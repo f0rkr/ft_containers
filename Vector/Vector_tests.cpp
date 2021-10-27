@@ -1,15 +1,4 @@
 /* ************************************************************************************************ */
-/*                                                                                                  */
-/*                                                        :::   ::::::::   ::::::::  :::::::::::    */
-/*   Vector_test.cpp                                   :+:+:  :+:    :+: :+:    :+: :+:     :+:     */
-/*                                                      +:+         +:+        +:+        +:+       */
-/*   By: mamoussa <mamoussa@student.1337.ma>           +#+      +#++:      +#++:        +#+         */
-/*                                                    +#+         +#+        +#+      +#+           */
-/*   Created: 2021/07/10 19:43:45 by mamoussa        #+#  #+#    #+# #+#    #+#     #+#             */
-/*   Updated: 2021/10/20 12:51:40 by mashad           ###   ########.fr       */
-/*                                                                                                  */
-/* ************************************************************************************************ */
-
 #include <vector>
 # include <iostream>
 # include <iterator>
@@ -1565,22 +1554,24 @@ void vector_tests(void)
                 ft_v1.push_back("string1");
                 ualarm(0, 0);
             }
+//			std::cout << "first" << std::endl;
             /*--------------------------------------------------------------------------------------*/
             // test 2: test with capacity lesser than the size + the new element (reallocation must happen)
             /*------------------ std::vectors ---------------------*/
-            {
-                std::vector<std::string>    v1(1e6, "string2");
-                start = get_time();
-                v1.push_back("string1");
-                end = get_time();
-                diff = end - start;
-                diff  =  (diff)  ? (diff  *  TIME_FAC)  :  TIME_FAC;
-                /*------------------ ft::vectors ---------------------*/
-                ft::Vector<std::string>    ft_v1(1e6, "string2");
-                ualarm(diff * 1e3, 0);
-                ft_v1.push_back("string1");
-                ualarm(0, 0);
-            }
+//            {
+//                std::vector<std::string>    v1(1e6, "string2");
+//                start = get_time();
+//                v1.push_back("string1");
+//                end = get_time();
+//                diff = end - start;
+//                diff  =  (diff)  ? (diff  *  TIME_FAC)  :  TIME_FAC;
+//                /*------------------ ft::vectors ---------------------*/
+//                ft::Vector<std::string>    ft_v1(1e6, "string2");
+//                ualarm(diff * 1e3, 0);
+//                ft_v1.push_back("string1");
+//                ualarm(0, 0);
+//            }
+//			std::cout << "second" << std::endl;
             /*--------------------------------------------------------------------------------------*/
         }
         /*------------------ std::vectors ---------------------*/
@@ -1602,7 +1593,7 @@ void vector_tests(void)
         ft_v.push_back("hello");
         ft_it = ft_v.begin();
         ft_it->length();
-        
+
         z1 = v.size();
         c1 = v.capacity();
         ft_z1 = ft_v.size();
@@ -1647,10 +1638,11 @@ void vector_tests(void)
 
         for (size_t i = 0; i < ft_v.size(); ++i)
             ft_s3 += ft_v.at(i);
-        
+
         EQUAL((s1 == ft_s1 && z1 == ft_z1 && c1 == ft_c1) && (s2 == ft_s2 && z2 == ft_z2 && c2 == ft_c2)
         && (s3 == ft_s3 && z3 == ft_z3 && c3 == ft_c3));
     }
+//	std::cout << "third" << std::endl;
     std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " pop_back method " << "] --------------------]\t\t\033[0m";
     {
         /*-------------------------------------- time limit test -----------------------------------*/
