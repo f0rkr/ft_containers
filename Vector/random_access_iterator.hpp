@@ -61,7 +61,7 @@ namespace ft {
 		    friend bool    operator!=(const random_access_iterator & lhs, const random_access_iterator &rhs)  { return (lhs._ptr != rhs._ptr); }
 		    friend bool    operator==(const random_access_iterator & lhs, const random_access_iterator &rhs)  { return (lhs._ptr == rhs._ptr); }
 
-		    size_t   operator-(random_access_iterator rhs) const {return (_ptr - rhs._ptr);}
+		    difference_type  operator-(random_access_iterator rhs) const {return (_ptr - rhs._ptr);}
 
 		    random_access_iterator   operator-(int rhs) const {return random_access_iterator(_ptr - rhs);}
 		    random_access_iterator   operator+(int rhs) const {return random_access_iterator(_ptr + rhs);}
