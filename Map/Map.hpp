@@ -6,14 +6,17 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 08:11:44 by                   #+#    #+#             */
-/*   Updated: 2021/10/10 10:32:58 by                  ###   ########.fr       */
+/*   Updated: 2021/10/25 08:16:02 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # ifndef MAP_HPP
 # define MAP_HPP
 
-# include "utils/pair.hpp"
+# include "../utils/pair.hpp"
+# include "../utils/utils.hpp"
+# include "RBTree.hpp"
+# include <iostream>
 
 namespace ft {
 	/** Map template
@@ -50,10 +53,8 @@ namespace ft {
 	 * template is used, which defines the simplest memory allocation model and is value-independent.
 	 * Aliased as member type map::allocator_type.
 	 */
-	template <	class Key, class T, class Compare = less<Key>, class Alloc = alllocator<pair<const Key, T>>>
+	template <	class Key, class T, class Compare = ft::less<Key>, class Alloc = std::alllocator<pair<const Key, T>> >
 			class map {
-				private:
-
 				public:
 
 					/* --------------------------- Member types --------------------------- */
@@ -160,7 +161,7 @@ namespace ft {
 					 * reverse_iterator
 					 * reverse_iterator<iterator>
 					 */
-					typedef typename ft::reverse_iterator::iterator	reverse_iterator;
+					typedef typename ft::reverse_iterator::iterator						reverse_iterator;
 
 
 
@@ -188,6 +189,11 @@ namespace ft {
 					 */
 					typedef size_t														size_type;
 
+					typedef ft::RBTree<value_type, allocator_type>						tree_type;
+
+				private:
+					tree_type	*rbtree;
+				public:
 					/* --------------------------- Member functions --------------------------- */
 
 					/** @Default constructor
