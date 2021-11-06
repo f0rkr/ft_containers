@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 15:57:43 by mashad            #+#    #+#             */
-/*   Updated: 2021/11/05 19:04:06 by mashad           ###   ########.fr       */
+/*   Updated: 2021/11/06 08:42:30 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ namespace ft {
 				return (root);
 			}
 	        Node*	_deleteBST(Node *&, int);
-			void	_fixInsertRBTree(Node *&);
-        	void	_fixDeleteRBTree(Node *&);
+			void	_fixInsertRBTree(Node *&root);
+        	void	_fixDeleteRBTree(Node *&root);
 		protected:
 
 
@@ -112,11 +112,10 @@ namespace ft {
 			~RBTree ();
 
 			void 	insert(const value_type &val = value_type()) {
-				if (empty()) { // If empty insert newNode as a root node and color it black
-
-				} else {
-
-				}
+				Node *newNode = _alloc.allocate(1);
+				_alloc.construct(&newNode, Node(val));
+				_rbtree = _insertBST(_rbtree, newNode);
+				_fixInsertRBTree(_rbtree);
 			}
 
 			void 	empty() {
