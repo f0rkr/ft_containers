@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RBT.hpp                                            :+:      :+:    :+:   */
+/*   RBTree.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By:  <>                                        +#+  +:+       +#+        */
+/*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/23 13:26:55 by                   #+#    #+#             */
-/*   Updated: 2021/10/25 08:27:21 by                  ###   ########.fr       */
+/*   Created: 2021/11/03 15:57:43 by mashad            #+#    #+#             */
+/*   Updated: 2021/11/05 19:04:06 by mashad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,30 @@
 # include "../utils/pair.hpp"
 
 namespace ft {
+	enum Color {RED, BLACK, DOUBLE_BLACK};
+	/** @brief Read Black Tree Node
+	 * Read black tree node container all necessary data
+	 * to create a red black tree.
+	 *
+	 * @data color
+	 */
+	struct Node {
+		int 		color;
+		value_type 	data;
+		struct Node *parent;
+		struct Node *leftChild;
+		struct Node *rightChild;
+
+		/** @brief Construct a Read black tree 
+		 *
+		 */
+		explicit Node(const value_type &data) {
+			this->color = red;
+			this->data = data;
+			this->parent = this->leftChild =this->rightChild = nullptr;
+			return ;
+		}
+	};
 	/** @brief Red-Black Tree
 	 * Red-Black tree is a self balancing binary search tree in which each node contains an extra bit for
 	 * denoting the color of the node, either red or black.
@@ -33,32 +57,33 @@ namespace ft {
 	 * class template is used, which defines the simplest memory allocation model and is value-independent.
 	 * @tparam T Type of the mapped value. Each element in a map stores some data as it's mapped value.
 	 */
-	template <class T, class Alloc>
+	template <class T, class Alloc = std::allocator()>
 	class RBTree {
 		public:
 			typedef T 									value_type;
 			typedef Alloc								allocator_type;
 
 		private:
-			enum Color {RED = 0, BLACK = 1, };
-			/** @brief Read Black Tree Node
-			 * Read black tree node container all necessary data
-			 * to create a red black tree.
-			 *
-			 * @data color
-			 */
-			struct Node {
-				Color		color;
-				value_type 	key;
-				struct Node parent;
-				struct Node leftChild;
-				struct Node rightChild;
-			};
-
-			struct Node 	*_rbtree;
+			Node 			*_rbtree;
 			size_type		_size;
 			allocator_type	_alloc;
 
+			Node*	_insertBST(Node *&root, Node *&node) {
+				if (root == nullptr)
+					return (node);
+				if (node->data < root->data) {
+					root->left = _insertBST(root->left, node);
+					root->left->parent = root;
+				} else if (node->data > root->data) {
+					root->right = _insertBST(root->right, node);
+					node->right->parent = root;
+				}
+				return (root);
+			}
+	        Node*	_deleteBST(Node *&, int);
+			void	_fixInsertRBTree(Node *&);
+        	void	_fixDeleteRBTree(Node *&);
+		protected:
 
 
 			//------------------ Private member functions ----------------//
@@ -80,7 +105,9 @@ namespace ft {
 			RBTree (const allocator_type& alloc = allocator_type()): _rbtree(nullptr), _alloc(alloc) {
 				return ;
 			}
-			explicit RBTree(const value_type &pair = value_type());
+			explicit RBTree(const value_type &pair = value_type()): _rbtree(_alloc.allocate(1)) {
+				return ;
+			}
 
 			~RBTree ();
 
@@ -95,6 +122,71 @@ namespace ft {
 			void 	empty() {
 				return (_size == 0);
 			}
+			int 	getColor(Node *&node) {
+				if (node == nullptr)
+					return ft::Color::Black;
+				return node->color;
+			}
+        	void	setColor(Node *&node, int color) {
+        		if (node == nullptr)
+        			return ;
+        		node->color = color;
+        	}
+	        int 	getBlackHeight(Node *node) {
+
+	        }
+
+	        /** @Brief Left Rotation
+	         *	Left Rotate the red black tree
+	         *  @param node
+	         * @return none
+	         */
+	        void	rotateLeft(Node *&node) {
+	        	Node *rightChild = node->right;
+	        	node->right = rightChild->left;
+
+	        	if (node->right != nullptr)
+	        		node->right->parent = node;
+	        	rightChild->parent = node->parent;
+	        	if (node->parent == nullptr)
+	        		root = rightChild;
+	        	else if (node == node->parent->left)
+	        		node->parent->left = rightChild;
+	        	rightChild->left = node;
+	        	node->parent = rightChild;
+	        }
+
+
+	        /** @Brief Right rotate
+	         * Right rotate the red black tree
+	         *
+	         * @param node
+	         * @return none
+	         */
+
+        	void	rotateRight(Node *&node) {
+        		Node *leftChild = node->left;
+        		node->left = leftChild->right;
+
+        		if (node->left != nullptr)
+        			node->right->parent = node;
+        		leftChild->parent = node->parent;
+        		if (node->parent == nullptr)
+        			root = leftChild;
+        		else if (node == node->parent->right)
+        			node->parent->right = leftChild;
+        		leftChild->right = node;
+        		node->parent = leftChild;
+        		return ;
+        	}
+        	void	insertData(value_type &data) {
+        		Node *node;
+
+        		node = _alloc.allocate(1);
+        		_alloc.construct(node, Node(data));
+        		_rbtree = _insertBST(_rbtree, node);
+        		_fixInsertRBTree(node);
+        	}
 	};
 }
 #endif
