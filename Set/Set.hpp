@@ -7,6 +7,7 @@
 # include "../utils/utils.hpp"
 # include "../utils/pair.hpp"
 # include "../Vector/iterator_traits.hpp"
+# include "../Map/red_black_tree_iterator.hpp"
 
 namespace ft {
 	/** @brief Set
@@ -30,21 +31,21 @@ namespace ft {
 	template < class T, class Compare = ft::less<T>, class Alloc = std::allocator<T> >
 		class set {
 		public:
-			typedef T			value_type;
-			typedef T			key_type;
-			typedef Compare		key_compare;
-			typedef Compare		value_compare;
-			typedef Alloc		allocator_type;
-			typedef allocator_type::reference	reference;
-			typedef allocator_type::const_reference	const_reference;
-			typedef allocator_type::pointer			pointer;
-			typedef allocator_type::const_pointer	const_pointer;
-			typedef ft::red_black_tree_iterator<value_type>		iterator;
-			typedef ft::red_black_tree_iterator<const value_type> const_iterator;
-			typedef ft::reverse_iterator<iterator>				reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator> 		const_reverse_iterator;
+			typedef T															value_type;
+			typedef T															key_type;
+			typedef Compare														key_compare;
+			typedef Compare														value_compare;
+			typedef Alloc														allocator_type;
+			typedef allocator_type::reference									reference;
+			typedef allocator_type::const_reference								const_reference;
+			typedef allocator_type::pointer										pointer;
+			typedef allocator_type::const_pointer								const_pointer;
+			typedef ft::rbTreeIterator<value_type>								iterator;
+			typedef ft::rbTreeIterator<const value_type> 						const_iterator;
+			typedef ft::reverse_iterator<iterator>								reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator> 						const_reverse_iterator;
 			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
-			typedef size_t				size_type;
+			typedef size_t														size_type;
 
 			/******************** Constructors **************************/
 			/** @brief Construct set
@@ -207,10 +208,191 @@ namespace ft {
 			 * @return
 			 */
 			ft::pair<iterator, bool>	insert (const value_type& val);
-			iterator insert (iterator position, const value_type& val);
+			iterator 					insert (iterator position, const value_type& val);
 			template <class InputIterator>
-					void insert (InputIterator first, InputIterator last);
+					void 				insert (InputIterator first, InputIterator last);
 
+
+			/** @brief Erase elements
+			 * Removes from the set container either a single element or a range of elements ([first, last]).
+			 *
+			 * This effectively reduces the container size by the number of elements removed, which are destroyed.
+			 *
+			 * @param position Iterator pointing to a single element to be removed from the set.
+			 * @param val Value to be removed from the set.
+			 * @param first, last Iterators specifying a range within the set container to be removed: [first, last].
+			 * i.e., the range includes all the elements between first and last, including the element pointed by first
+			 * but not the one pointed by last.
+			 * @return For the value-based version, the function returns the number of elements erased.
+			 */
+			 void 	erase(iterator position);
+			 size_type	erase(const value_type &val);
+			 void 		erase(iterator first, iterator last);
+
+			 /** @brief Swap content
+			  * Exchange the content of the container by the content of x, which is another set of
+			  * the same type. Sizes may differ.
+			  *
+			  * After the call to this member function, the element in this container are those which
+			  * are in x before the call, and the elements of x are those which were in this. All iterators,
+			  * references and pointers remain valid for the swapped objects.
+			  *
+			  * @param x Another set container of the same type as this (i.e., with the same template
+			  * parameters, T, Compare and Alloc) whose content is swapped with that of this container.
+			  * @return none
+			  * @complixity Constant.
+			  */
+			  void 	swap(set& x);
+
+
+			  /** @brief Clear content
+			   * Removes all elements from the set container (which are destroyed), leaving the container
+			   * with a size of 0.
+			   *
+			   * @param none
+			   * @return none
+			   * @complixity Linear in size (destructions)
+			   */
+			   void clear();
+
+
+			   /** @brief Returns comparison object
+			    * Returns a copy of the comparison object used by the container.
+			    *
+			    * By default, this a less object, which returns the same as operator<.
+			    *
+			    * This object determines the order of the elements iin the container: it is a function
+			    * pointer or a function object that takes two arguments of the same type as the container
+			    * elements, and returns true if the first argument is considered to go before the second in
+			    * the strict weak ordering it defines, and false otherwise.
+			    *
+			    * Two elements of a set are considered equivalent if key_comp returns false reflexively(i.e no matter
+			    * the order in which the elements are passed as arguments).
+			    *
+			    * In set containers, the keys to sort the elements are the values themselves, therefore key_comp
+			    * and it's sibling member function value_comp are equivalent.
+			    *
+			    * @param none
+			    * @return The comparison object.
+			    */
+			    key_compare		key_comp() const;
+
+				/** @brief Return comparison object
+				 *
+				 * Returns a copy of the comparison object used by the container.
+				 *
+				 * By default, this is a less object, which returns the same as operator<.
+				 *
+				 * This object determines the order of the elements in the container: it is a function
+				 * pointer or a function object that takes two arguments of the saame type as the container
+				 * elements, and returns true if the first argument is considered to o before the second in the
+				 * strict weak ordering it defines, and false otherwise.
+				 *
+				 * Two elements of a set are considered equivalent if value_comp returns false reflexively (i.e.,
+				 * no matter the order in which the elements are passed as arguments).
+				 *
+				 * In set containers, the keys to sort the element are the values themselves, therefore value_comp
+				 * and it's sibling member function key_comp are equivalent.
+				 *
+				 * @param none
+				 * @return The comparison object
+				 * @complixity Constant
+				 */
+				 value_compare	value_comp() const;
+
+
+				 /** @brief Get iterator to element
+				  * Searches the container for an element equivalent to val and returns an iterator to it if found
+				  * otherwise it returns an iterator to set:end.
+				  *
+				  * Two elements of a set are considered equivalent if the container's comparison object returns false
+				  * reflexively (i.e., no matter the order in which the elements are passed as arguments).
+				  *
+				  * @param val Value to be searched for.
+				  * @return An iterator to the element, if val is found, or set::end otherwise.
+				  * @Complexity Logarithmic in size.
+				  */
+				  iterator		find(const value_type& val) const;
+
+
+				  /** @brief Count elements with a specific value
+				   * Searches the container for elements equivalent to val and returns the number of matches
+				   *
+				   * Because all elements in a set container are unique, the function can only return 1 (if the element is found)
+				   * or zero (otherwise).
+				   *
+				   * Two elements of a set are considered equivalent if the container's comparison object
+				   * returns false reflexively (i.e., no matter the order in which the elements are passed as arguments).
+				   *
+				   * @param val Value to search for.
+				   * @return 1 if the container contains an element to val, or zero otherwise.
+				   * @complixity Logarithmic in size.
+				   */
+				   size_type	count (const value_type& val) const;
+
+
+				   /** @brief Return iterator to lower bound
+				    * Returns an iterator pointing to th first element in the container which is not considered
+				    * to go before val (i.e., either it is equivalent or goes after).
+				    *
+				    * The function uses it's internal comparison object (key_comp) to determine this, returning
+				    * an iterator to the first element for which key_comp(element, val) would return false.
+				    *
+				    * If the set class is instantiated with the default comparison type (less), the function returns
+				    * an iterator to the first element that i s not less than val.
+				    *
+				  	* @param val Value to compare.
+				    * @return An iterator to the first element in the container which is not considered to go
+				    * before val, or set::end if all elements are considered to go before val.
+				    * @complixity Logarithmic in size.
+				    */
+				    iterator lower_bound(const value_type& val) const;
+
+
+					/** @brief Return iterator to upper bound
+					 * Return an iterator pointing to the first element in the container which is considered to
+					 * go after val.
+					 *
+					 * The function uses it's internal comparison object (key_comp) to determine this,
+					 * returning an iterator to the first element for which key_comp(val, element) would return true.
+					 *
+					 * If the set class is instantiated with the default comparison type (less), the function
+					 * returns an iterator to the first element that is greater than val.
+					 *
+					 * @param val Value to compare.
+					 * @return An iterator to the first element in the container which is considered to go after val, or set:end
+					 * @complixity Logarithmic in size.
+					 */
+					 iterator 	upper_bound (const value_type& val) const;
+
+					/** @brief Get range of equal elements
+					 * Returns the bounds of a range that includes all the elements in the container that are equivalent
+					 * to val.
+					 *
+					 * Because all elements in a set container are unique, the range returned will contain a single element
+					 * at most.
+					 *
+					 * If no matches are found, the range returned has a length of zero, with both iterators pointing
+					 * to the first element that is considered to ggo after val according to the container's internal comparison object
+					 * (key_comp).
+					 *
+					 * Two elements of a set are considered equivalent if the container's comparison object
+					 * returns false reflexively (i.e., no matter the order in which the elements are passed as arguments).
+					 *
+					 * @param val Value to search for.
+					 * @return The function returns a pair, whose member pair::first is the lower bound of the range
+					 * (the same as lower_bound), and pair::second is the upper bound (the same as upper_bound).
+					 */
+					 pair<iterator, iterator> equal_range (const value_type& val) const;
+
+
+					 /** @brief Get allocator
+					  * Returns a copy of the allocator object associated with the set.
+					  *
+					  * @param none
+					  * @return The allocator.
+					  */
+					  allocator_type	get_allocator() const { return (_alloc)};
 	};
 }
 #endif
