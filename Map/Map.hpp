@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 08:11:44 by                   #+#    #+#             */
-/*   Updated: 2021/10/25 08:16:02 by                  ###   ########.fr       */
+/*   Updated: 2021/11/13 16:51:23 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,8 @@ namespace ft {
 					typedef ft::RBTree<value_type, allocator_type>						tree_type;
 
 				private:
-					tree_type	*rbtree;
+					tree_type		*_rbtree;
+					allocator_type	_alloc;
 				public:
 					/* --------------------------- Member functions --------------------------- */
 
@@ -216,8 +217,7 @@ namespace ft {
 					 * If allocator_type is an instantiation of the default allocator (which has no state), this
 					 * parameter is not relevant.
 					 */
-					explicit Map (const key_compare& comp = key_compare(),
-										const allocator_type& alloc = allocator_type());
+					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _rbtree(nullptr);
 
 
 
@@ -423,7 +423,9 @@ namespace ft {
 					 * @return true if the container size is 0, false otherwise
 					 * @complixity constant
 					 */
-					bool				empty() const;
+					bool				empty() const {
+						return (_size == 0);
+					}
 
 
 
@@ -436,7 +438,7 @@ namespace ft {
 					 * Member type size_type is an unsigned integral type
 					 * @complixity constant
 					 */
-					size_type			size() const;
+					size_type			size() const {return (_size)}
 
 
 
@@ -454,7 +456,9 @@ namespace ft {
 					 * Member type size_type is an unsigned integral type
 					 * @complexity Constant
 					 */
-					size_type			max_size() const;
+					size_type			max_size() const {
+						return (_alloc.max_size());
+					}
 
 
 
