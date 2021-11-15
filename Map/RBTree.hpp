@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 15:57:43 by mashad            #+#    #+#             */
-/*   Updated: 2021/11/13 18:28:48 by                  ###   ########.fr       */
+/*   Updated: 2021/11/14 15:51:18 by mashad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,32 +27,58 @@ namespace ft {
 	template <class T>
 	class Node {
 		public:
-			Node *left;
-			Node *right;
-			Node *parent;
+			Node 	*left;
+			Node 	*right;
+			Node 	*parent;
+			T 		data;
+			Color	color;
 
+			explicit Node(const T &data = data): left(nullptr), right(nullptr), data(value), color(RED) {
+                return ;
+			}
+			bool	isLeft() {
+				if (parent && parent->left)
+					return parent->left == this;
+				return false;
+			}
 
-			explicit Node(const value_type &data = data) {
+			bool	isRight() {
+				if (parent && parent->right)
+					return parent->right == this;
+				return false;
+			}
 
+			Node*	getGrandParent() {
+				if (parent && parent->parent)
+					return parent->parent;
+				return NULL;
+			}
+
+			Node*	getUncle() {
+				if (parent && parent->isLeft())
+					return getGrandParent()->right;
+				if (parent && !parent->isLeft())
+					return getGrandParent()->left;
+				return NULL;
 			}
 	};
-	struct Node {
-		int 		color;
-		Pair 	*ata;
-		struct node_type *parent;
-		struct node_type *leftChild;
-		struct node_type *rightChild;
+	// struct Node {
+	// 	int 		color;
+	// 	Pair 	*ata;
+	// 	struct node_type *parent;
+	// 	struct node_type *leftChild;
+	// 	struct node_type *rightChild;
 
-		/** @brief Construct a Read black tree 
-		 *
-		 */
-		explicit Node(const value_type &data) {
-			this->color = red;
-			this->data = data;
-			this->parent = this->leftChild =this->rightChild = nullptr;
-			return ;
-		}
-	};
+	// 	* @brief Construct a Read black tree 
+	// 	 *
+		 
+	// 	explicit Node(const value_type &data) {
+	// 		this->color = red;
+	// 		this->data = data;
+	// 		this->parent = this->leftChild =this->rightChild = nullptr;
+	// 		return ;
+	// 	}
+	// };
 	/** @brief Red-Black Tree
 	 * Red-Black tree is a self balancing binary search tree in which each node contains an extra bit for
 	 * denoting the color of the node, either red or black.
@@ -69,28 +95,40 @@ namespace ft {
 	 * class template is used, which defines the simplest memory allocation model and is value-independent.
 	 * @tparam T Type of the mapped value. Each element in a map stores some data as it's mapped value.
 	 */
-	template <class T, class Alloc>
+	template <typename T, typename Compare, typename Alloc>
 	class RBTree {
 		public:
-			typedef T 														value_type;
-			typedef Alloc													allocator_type;
-			typedef	Node													node_type;
+			typedef T															value_type;
+			typedef size_t														size_type;
+			typedef Allocator													allocator;
+			typedef ft::Node<T>													node_type;
+			typedef typename Allocator::template rebind<node_type>::other		node_allocator;
+			typedef Compare														compare;
+			typedef typename node_allocator::pointer							pointer;
+			typedef typename node_allocator::const_pointer						const_pointer;
+			typedef ft::rbtree_iterator<pointer, T >							iterator;
+			typedef ft::rbtree_iterator<const_pointer, const T >				const_iterator;
+			typedef ft::reverse_iterator<iterator>								reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
 
 		private:
-			node_type 			*_rbtree;
+			pointer			_root;
 			size_type		_size;
-			allocator_type	_alloc;
+			node_allocator	_node_allocator;
+			allocator		_pair_allocator;
+			compare			_compare;
 
-			typename _allocator_type()::template rebind<node_type>::other  _nodeAlloc;
 
-			node_type  *init_node(const value_type &val) {
-				node_type *newNode;
-
-				newNode = _nodeAlloc.allocate(1);
-				_nodeAlloc.construct(newNode, node_type(val));
-				return (newNode);
+			pointer 	init_node(const value_type &val) {
+				pointer	newNode = _node_allocator.allocate(1);
+				_node_allocator.construct(newNode, val);
+				newNode->parent = nullptr;
+				newNode->left = nullptr;
+				newNode->right = nullptr;
+				newNode->color = RED;
+				return newNode;
 			}
-	protected:
+		protected:
 			//------------------ Private member functions ----------------//
 
 			/** @brief Clear content
@@ -98,8 +136,20 @@ namespace ft {
 			 * @param none
 			 * @return none
 			 */
-			void 		_clear();
-			node_type*	_insertBST(node_type *&root, node_type *&node) {
+			void 		_clear() {
+				if (_root && _root != nullptr) {
+					destroyNode(_root);
+					_size = 0;
+					_root = nullptr;
+				}
+			}
+			void		swap(RBTree& x) {
+				ft::swap(_root, x._root);
+				ft::swap(_size, x._size);
+				ft::swap(_node_allocator, x._node_allocator);
+				ft::swap(_compare, x._compare);
+			}
+			node_type*	_insertBST  (pointer &root, pointer &node) {
 				if (root == nullptr)
 					return (node);
 				if (node->data < root->data) {
@@ -111,18 +161,20 @@ namespace ft {
 				}
 				return (root);
 			}
-			void 	_deleteBST(node_type *&root, node_type *&node) {
+			void 	_deleteBST(pointer &root, pointer &node) {
 				if (node == nullptr)
 					return ;
 				if (root->data == node->data) {
 					if (!(node->left) && !(node->right)) {
 						if (node == _root) {
-							std::allocator<node_type>().deallocate(node, 1);
+                            _node_allocator.destory(node);
+							_node_allocator.deallocate(node, 1);
 							node = nullptr;
 							return ;
 						}
 						deleteFix(node);
-						std::allocator<node_type>().deallocate(node, 1);
+                        _node_allocator.destroy(node);
+						_node_allocator.deallocate(node, 1);
 						node = nullptr;
 					}
 					else {
@@ -144,7 +196,7 @@ namespace ft {
 					deleteRBT(root->left, node);
 			}
 
-			void    insertFix(node_type *&node) {
+			void    insertFix(pointer &node) {
 				while (node->parent->color == RED) {
 					if (node->parent->parent->left == node->parent) {
 						if (node->parent->parent->right && node->parent->parent->right->color == RED) {
@@ -182,14 +234,14 @@ namespace ft {
 				_root->color = BLACK;
 			}
 
-			void    deleteFix(node_type *&node) {
+			void    deleteFix(pointer &node) {
 				if (node->color == RED)
 					return ;
 				if (node == _root) {
 					node->color = BLACK;
 					return ;
 				}
-				node_type *sibling = (node->parent->left == node) ? (node->parent->right) : (node->parent->left);
+				pointer sibling = (node->parent->left == node) ? (node->parent->right) : (node->parent->left);
 				if (sibling && sibling->color == BLACK) {
 					// case 3: DB sibling is black and both sibling's childs are black
 					/*
@@ -232,7 +284,7 @@ namespace ft {
 
 						}
 					} else {
-						/* case4 sibling is black and nearest sibling child to db node is red
+						/** case4 sibling is black and nearest sibling child to db node is red
 															  1       swap sibling and red child colors
 															  2       rotate sibling in opposite direction of DB node
 															  3       will lead to case5 and get applied
@@ -241,7 +293,7 @@ namespace ft {
 							std::swap(sibling->right->color, sibling->color);
 							leftRotate(sibling);
 						} else if (sibling->left && sibling->left->color == RED) {
-							/* case5 sibling is black and farthest child from db node is red
+							/** case5 sibling is black and farthest child from db node is red
 															   1       swap parent and sibling colors
 															   2       rotate parent in direction of DB
 															   3       remove DB
@@ -272,19 +324,17 @@ namespace ft {
 
 			}
 
-			node_type 	*_findRBT(node_type *root, value_type data) {
+			pointer _findRBT(node_type *root, value_type data) {
 				if (data == root->data)
 					return (root);
-				else if (data > root->data)
-					return (find(root->right, data));
-				else if (data < root->data)
-					return (find(root->left, data));
+				else if (_compare(root->data, data))
+					return (_findRBT(root->right, data));
+				else if (_compare(data, root->data))
+					return (_findRBT(root->left, data));
 				return (NULL);
 			}
 
-	public:
-			typedef struct Node	node;
-
+		public:
 			/** @brief Empty Tree constructor (Default constructor)
 			 * Construct an empty container, with no elements.
 			 *
@@ -353,8 +403,6 @@ namespace ft {
 	        	rightChild->left = node;
 	        	node->parent = rightChild;
 	        }
-
-
 	        /** @Brief Right rotate
 	         * Right rotate the red black tree
 	         *
@@ -401,7 +449,6 @@ namespace ft {
 				}
 				return (parent);
 			}
-
 			void  rbTransplant(node_type *&rnode, node_type *&lnode) {
 				if (rnode->parent == nullptr) {
 					_root = v;
@@ -433,6 +480,14 @@ namespace ft {
 					return ;
 				PrintTree(_root);
 				return ;
+			}
+			void	destroyNode(pointer node) {
+				if (node != nullptr) {
+					destroyNode(node->left):
+					destroyNode(node->right);
+					_node_allocator.destroy(node);
+					_node_allocator.deallocate(node, 1);
+				}
 			}
 	};
 }

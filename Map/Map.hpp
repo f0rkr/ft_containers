@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By:  <>                                        +#+  +:+       +#+        */
+/*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/22 08:11:44 by                   #+#    #+#             */
-/*   Updated: 2021/11/13 16:51:23 by                  ###   ########.fr       */
+/*   Created: 2021/11/13 19:00:53 by mashad            #+#    #+#             */
+/*   Updated: 2021/11/14 15:25:43 by mashad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ namespace ft {
 	 * template is used, which defines the simplest memory allocation model and is value-independent.
 	 * Aliased as member type map::allocator_type.
 	 */
-	template <	class Key, class T, class Compare = ft::less<Key>, class Alloc = std::alllocator<pair<const Key, T>> >
+	template <	class Key, class T, class Compare = ft::less<Key>, class Alloc = std::alllocator<ft::pair<const Key, T>> >
 			class map {
 				public:
 
@@ -189,10 +189,18 @@ namespace ft {
 					 */
 					typedef size_t														size_type;
 
-					typedef ft::RBTree<value_type, allocator_type>						tree_type;
-
+					typedef ft::RBTree<value_type, value_compare, allocator_type>						tree_type;
+					class value_compare {
+						public:
+							typedef key_compare		comp;
+							bool	operator()(const value_type& x, const value_type& y) const {
+								return comp()(x.first, y.first);
+							}
+					}
 				private:
 					tree_type		*_rbtree;
+					key_compare		_compare;
+					value_compare	_value_compare;
 					allocator_type	_alloc;
 				public:
 					/* --------------------------- Member functions --------------------------- */
@@ -217,7 +225,7 @@ namespace ft {
 					 * If allocator_type is an instantiation of the default allocator (which has no state), this
 					 * parameter is not relevant.
 					 */
-					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _alloc(alloc), _rbtree(nullptr);
+					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _rbtree(nullptr), _alloc(alloc), _compare(comp), _value_compare(value_compare());
 
 
 
@@ -255,7 +263,14 @@ namespace ft {
 					template <class InputIterator>
 									  Map (InputIterator first, InputIterator last,
 										   const key_compare& comp = key_compare(),
-										   const allocator_type& alloc = allocator_type());
+										   const allocator_type& alloc = allocator_type()) {
+									  	_compare = comp;
+									  	_alloc = alloc;
+									  	_value_compare = value_compare();
+									  	for (InputIterator it = first, it != last ; it++) {
+									  		_rbtree.insert(*tmp);
+									  	}
+									  }
 
 
 
@@ -272,7 +287,7 @@ namespace ft {
 					 * , Compare and Alloc), whose contents are either copied of acquired.
 					 * @return none
 					 */
-					Map (const Map& x);
+					Map (const Map& x) {*this = x;}
 
 
 
@@ -303,7 +318,15 @@ namespace ft {
 					 * @return  *this
 					 * @complixity Linear in sizes (destruction, copies).
 					 */
-					Map&			operator= (const Map& x);
+					Map&			operator= (const Map& x) {
+						if (*this == other)
+							return (*this);
+						_rbtree = other._rbtree;
+						_alloc = x._alloc;
+						_compare = x._compare;
+						_value_compare = x._value_compare;
+						return (*this);
+					}
 
 
 					/* --------------------------- Iterators --------------------------- */
@@ -326,8 +349,8 @@ namespace ft {
 					 * Notice that value_type in map containers is an alias of pair<const key_type, mapped_type>
 					 * @complixity constant.
 					 */
-					iterator			begin();
-					const_iterator 	begin() const;
+					iterator			begin() {return _rbtree->begin();}
+					const_iterator 	begin() const {return _rbtree.begin();}
 
 
 
@@ -351,8 +374,8 @@ namespace ft {
 					 * types pointing to elements.
 					 * @complixity constant
 					 */
-					iterator 			end();
-					const_iterator 	end() const;
+					iterator 			end() {return _rbtree.end();}
+					const_iterator 	end() const {return _rbtree.end();}
 
 
 
@@ -375,8 +398,8 @@ namespace ft {
 					 * iterator types pointing to elements.
 					 * @complixity Constant
 					 */
-					reverse_iterator			rbegin();
-					const_reverse_iterator	rbegin() const;
+					reverse_iterator			rbegin() {return _rbtree.rbegin();}
+					const_reverse_iterator	rbegin() const {return _rbtree.end();}
 
 
 
@@ -401,8 +424,8 @@ namespace ft {
 					 * iterator types pointing to elements.
 					 * @complixity Constant
 					 */
-					reverse_iterator				rend();
-					const_reverse_iterator		rend() const;
+					reverse_iterator				rend() {return (_rbtree.rend());}
+					const_reverse_iterator		rend() const {return (_rbtree.rend());}
 
 
 
@@ -424,7 +447,7 @@ namespace ft {
 					 * @complixity constant
 					 */
 					bool				empty() const {
-						return (_size == 0);
+						return (_rbtree.getSize() == 0);
 					}
 
 
@@ -438,7 +461,7 @@ namespace ft {
 					 * Member type size_type is an unsigned integral type
 					 * @complixity constant
 					 */
-					size_type			size() const {return (_size)}
+					size_type			size() const {return (_rbtree.getSize())}
 
 
 
@@ -457,7 +480,7 @@ namespace ft {
 					 * @complexity Constant
 					 */
 					size_type			max_size() const {
-						return (_alloc.max_size());
+						return (_rbtree.max_size());
 					}
 
 
@@ -487,7 +510,9 @@ namespace ft {
 					 * as an alias of it's second template parameter (T).
 					 * @complixity Logarithmic in size
 					 */
-					mapped_type&	operator[] (const key_type& k);
+					mapped_type&	operator[] (const key_type& k) {
+						iterator 
+					}
 
 
 					/** Insert elements
@@ -540,10 +565,18 @@ namespace ft {
 					 * in general, but linear in size+N if the elements are already sorted according to the same ordering
 					 * criterion used by the container.
 					 */
-					pair<iterator, bool>	insert (const value_type& val);
-					iterator				insert (iterator position, const value_type& val);
+					pair<iterator, bool>	insert (const value_type& val) {
+						return _rbtree.insert(val);
+					}
+					iterator				insert (iterator position, const value_type& val) {
+						return _rbtree.insert(val).first;
+					}
 					template <class InputIterator>
-							void 			insert (InputIterator first, InputIterator last);
+							void 			insert (InputIterator first, InputIterator last) {
+								for (InputIterator it = first; it != last; it++) {
+									_rbtree.insert(*it);
+								}
+							}
 
 
 
@@ -568,9 +601,23 @@ namespace ft {
 					 * @return For the key-based version (2), the function the number of element erased.
 					 * Member type size_type is an unsigned integral type.
 					 */
-					void 					erase (iterator position);
-					size_type				erase (const key_type& k);
-					void 					erase (iterator first, iterator last);
+					void 					erase (iterator position) {
+						_rbtree.remove(*position);
+					}
+					size_type				erase (const key_type& k) {
+						iterator it = find(k);
+
+						if (k != end()) {
+							_rbtree.remove(*found);
+							return (1);
+						}
+						return (0);
+					}
+					void 					erase (iterator first, iterator last) {
+						for (iterator it = first; it != last ; it++) {
+							_rbtree.remove(*it);
+						}
+					}
 
 
 
@@ -593,7 +640,12 @@ namespace ft {
 					 * @return none
 					 * @complixity Constant
 					 */
-					void 					swap (Map& x);
+					void 					swap (Map& x) {
+						ft::swap(_alloc, x._alloc);
+						ft::swap(_compare, x._compare);
+						ft::swap(_value_compare, x._value_compare);
+						_rbtree.swap(x._rbtree);
+					}
 
 
 
@@ -605,7 +657,7 @@ namespace ft {
 					 * @return none
 					 * @complixity Linear in size (destructions).
 					 */
-					void 					clear();
+					void 					clear() {_rbtree.clear();}
 
 
 
@@ -636,7 +688,7 @@ namespace ft {
 					 * in map as an alias of it's third template parameter (Compare).
 					 * @complixity none
 					 */
-					key_compare 	key_comp() const;
+					key_compare 	key_comp() const {return (_compare);}
 
 
 
@@ -666,7 +718,7 @@ namespace ft {
 					 * Member type value_compare is a nested class type.
 					 * @complixity constant
 					 */
-					value_compare	value_comp() const;
+					value_compare	value_comp() const {return _value_compare;}
 
 
 
