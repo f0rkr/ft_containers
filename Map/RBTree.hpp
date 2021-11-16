@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 15:57:43 by mashad            #+#    #+#             */
-/*   Updated: 2021/11/16 08:01:43 by                  ###   ########.fr       */
+/*   Updated: 2021/11/16 13:12:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 # include "../utils/pair.hpp"
 # include "red_black_tree_iterator.hpp"
-
+# include "../Vector/reverse_iterator.hpp"
 namespace ft {
 	enum Color {RED=1, BLACK=0, DBLACK=2};
 	/** @brief Read Black Tree Node
@@ -120,13 +120,13 @@ namespace ft {
 			 * @param none
 			 * @return none
 			 */
-			void		swap(RBTree& x) {
+			void			swap(RBTree& x) {
 				std::swap(_root, x._root);
 				std::swap(_size, x._size);
 				std::swap(_node_allocator, x._node_allocator);
 				std::swap(_compare, x._compare);
 			}
-			node_type*	_insertBST  (pointer &root, pointer &node) {
+			node_type*		_insertBST  (pointer &root, pointer &node) {
 				if (root == nullptr)
 					return (node);
 				if (_compare(node->data, root->data)) {
@@ -138,7 +138,7 @@ namespace ft {
 				}
 				return (root);
 			}
-			void 	_deleteBST(pointer &root, pointer &node) {
+			void 			_deleteBST(pointer &root, pointer &node) {
 				if (node == nullptr)
 					return ;
 				if (root->data == node->data) {
@@ -172,8 +172,7 @@ namespace ft {
 				else
 					deleteRBT(root->left, node);
 			}
-
-			void    insertFix(pointer &node) {
+			void    		insertFix(pointer &node) {
 				while (node->parent->color == RED) {
 					if (node->parent->parent->left == node->parent) {
 						if (node->parent->parent->right && node->parent->parent->right->color == RED) {
@@ -210,8 +209,7 @@ namespace ft {
 				}
 				_root->color = BLACK;
 			}
-
-			void    deleteFix(pointer &node) {
+			void    		deleteFix(pointer &node) {
 				if (node->color == RED)
 					return ;
 				if (node == _root) {
@@ -300,8 +298,7 @@ namespace ft {
 				}
 
 			}
-
-			pointer _findRBT(node_type *root, value_type data) {
+			pointer 		_findRBT(node_type *root, value_type data) {
 				if (data == root->data)
 					return (root);
 				else if (_compare(root->data, data))
@@ -320,7 +317,7 @@ namespace ft {
 			RBTree (): _root(nullptr) {
 				return ;
 			}
-			explicit RBTree(const value_type &pair = value_type()): _root(init_node(nullptr)) {
+			RBTree(const value_type &pair = value_type()): _root(init_node(pair)) {
 				return ;
 			}
 
@@ -346,12 +343,9 @@ namespace ft {
         			return ;
         		node->color = color;
         	}
-	        int 	getBlackHeight(node_type *node) {
-
-	        }
 			node_type   *minimum(node_type *node) {
 				if (node == nullptr)
-					return (nullptr);ß
+					return (nullptr);
 				while (node->left != nullptr) {
 					node = node->left;
 				}
@@ -359,7 +353,7 @@ namespace ft {
 			}
 			node_type   *maximum(node_type *node) {
 				if (node == nullptr)
-					return (nullptr);ß
+					return (nullptr);
 				while (node->right != nullptr) {
 					node = node->right;
 				}
@@ -504,10 +498,30 @@ namespace ft {
 			 *
 			 * @return An iterator to the past-the-end element in the red black tree.
 			 */
-			 iterator	end() {}
-			 const_iterator	end() const {}
+			 iterator	end() {return (nullptr);}
+			 const_iterator	end() const {return (nullptr);}
 
+			 iterator	rbegin() {return (nullptr);}
+			 const_iterator rbegin() const {return (nullptr);}
 
+			 iterator	rend() {
+				 pointer tmp = _root;
+
+				 if (_root == nullptr)
+					 return (nullptr);
+				 while (tmp->left)
+					 tmp = tmp->left;
+				 return (iterator(tmp));
+			 }
+			 const_iterator rend() const {
+				 pointer tmp = _root;
+
+				 if (_root == nullptr)
+					 return (nullptr);
+				 while (tmp->left)
+					 tmp = tmp->left;
+				 return (iterator(tmp));
+			 }
 	};
 }
 #endif

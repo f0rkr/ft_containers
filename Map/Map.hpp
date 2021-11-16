@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 19:00:53 by mashad            #+#    #+#             */
-/*   Updated: 2021/11/15 14:04:11 by                  ###   ########.fr       */
+/*   Updated: 2021/11/16 13:09:03 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ namespace ft {
 					 * The third template parameter (Compare)
 					 * @defaults to: less<key_type>
 					 */
-					typedef less<key_type>													key_compare;
+					typedef ft::less<key_type>													key_compare;
 
 					/**
 					 * value_compare
@@ -137,7 +137,7 @@ namespace ft {
 					   * allocator_type::const_pointer
 					   * @defaults: allocator const value_type*
 					   */
-					typedef typename allocator_type::cont_pointer								const_pointer;
+					typedef typename allocator_type::const_pointer								const_pointer;
 
 
 
@@ -146,14 +146,14 @@ namespace ft {
 					 * a bidirectional iterator to value_type
 					 * @convertible to const_iterator
 					 */
-					typedef typename ft::random_access_iterator<T>::iterator				iterator;
+					typedef typename ft::rbTreeIterator<T>				iterator;
 
 
 					/**
 					 * const_iterator
 					 * A bidirectional iterator to const value_type
 					 */
-					typedef typename ft::random_access_iterator<T>::const_iterator		const_iterator;
+					typedef typename ft::rbTreeIterator<const T>		const_iterator;
 
 
 
@@ -161,7 +161,7 @@ namespace ft {
 					 * reverse_iterator
 					 * reverse_iterator<iterator>
 					 */
-					typedef typename ft::reverse_iterator<T>::iterator						reverse_iterator;
+					typedef typename ft::reverse_iterator<iterator>							reverse_iterator;
 
 
 
@@ -169,7 +169,7 @@ namespace ft {
 					 * const_reverse_iterator
 					 * reverse_iterator<const_iterator>
 					 */
-					typedef typename ft::reverse_iterator<T>::const_iterator				const_reverse_iterator;
+					typedef typename ft::reverse_iterator<const iterator>			const_reverse_iterator;
 
 
 					/**
@@ -188,20 +188,23 @@ namespace ft {
 					 * difference_type
 					 */
 					class value_compare {
-					public:
-						typedef key_compare		comp;
-						bool	operator()(const value_type& x, const value_type& y) const {
-							return comp()(x.first, y.first);
-						}
+						public:
+							typedef key_compare		comp;
+							bool	operator()(const value_type& x, const value_type& y) const {
+								return comp()(x.first, y.first);
+							}
 					};
-					typedef size_t														size_type;
+					typedef size_t																		size_type;
 					typedef ft::RBTree<value_type, value_compare, allocator_type>						tree_type;
+					typedef typename allocator_type::template rebind<tree_type>::other					tree_allocator;
 
-				private:
+
+	private:
 					tree_type		_rbtree;
 					key_compare		_compare;
 					value_compare	_value_compare;
 					allocator_type	_alloc;
+					tree_allocator 	_tree_alloc;
 				public:
 					/* --------------------------- Member functions --------------------------- */
 
@@ -225,7 +228,9 @@ namespace ft {
 					 * If allocator_type is an instantiation of the default allocator (which has no state), this
 					 * parameter is not relevant.
 					 */
-					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _rbtree(nullptr), _alloc(alloc), _compare(comp), _value_compare(value_compare()) {};
+					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _compare(comp), _value_compare(value_compare()) , _alloc(alloc){
+						return ;
+					};
 
 
 
@@ -268,7 +273,7 @@ namespace ft {
 									  	_alloc = alloc;
 									  	_value_compare = value_compare();
 									  	for (InputIterator it = first; it != last ; it++) {
-									  		_rbtree->insertData(*it);
+									  		_rbtree.insertData(*it);
 									  	}
 									  }
 
@@ -301,7 +306,9 @@ namespace ft {
 					 * @complixity Linear
 					 * @return none
 					 */
-					~Map();
+					~Map() {
+						return ;
+					}
 
 
 					/** @Copy container content
@@ -321,6 +328,7 @@ namespace ft {
 					Map&			operator= (const Map& x) {
 						if (*this == x)
 							return (*this);
+						_rbtree.clear();
 						_rbtree = x._rbtree;
 						_alloc = x._alloc;
 						_compare = x._compare;
@@ -349,7 +357,7 @@ namespace ft {
 					 * Notice that value_type in map containers is an alias of pair<const key_type, mapped_type>
 					 * @complixity constant.
 					 */
-					iterator			begin() {return _rbtree->begin();}
+					iterator			begin() {return _rbtree.begin();}
 					const_iterator 	begin() const {return _rbtree.begin();}
 
 
@@ -511,7 +519,7 @@ namespace ft {
 					 * @complixity Logarithmic in size
 					 */
 					mapped_type&	operator[] (const key_type& k) {
-//						iterator
+						return (_rbtree.find(k));
 					}
 
 
@@ -569,6 +577,7 @@ namespace ft {
 						return _rbtree.insertData(val);
 					}
 					iterator				insert (iterator position, const value_type& val) {
+						(void)position;
 						return _rbtree.insertData(val).first;
 					}
 					template <class InputIterator>

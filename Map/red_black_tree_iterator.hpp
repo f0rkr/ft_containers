@@ -36,7 +36,7 @@ namespace ft {
 				_ptr = _ptr->_inOrderPredecessor(_ptr);
 				return (*this);
 			}
-			rbTreeIterator		&operator++() {
+			rbTreeIterator		operator++(int) {
 				rbTreeIterator	tmp = *this;
 
 				if (_ptr == nullptr)
@@ -50,7 +50,7 @@ namespace ft {
 				_ptr = _ptr->_inOrderSucessor(_ptr);
 				return (*this);
 			}
-			rbTreeIterator		&operator--() {
+			rbTreeIterator		operator--(int) {
 				rbTreeIterator	tmp = *this;
 				_ptr = _ptr->_inOrderSucessor(_ptr);
 				return (tmp);
@@ -62,23 +62,5 @@ namespace ft {
 			pointer		_ptr;
 	};
 
-	template <class iterator>
-	class rbTreeReverseIterator: public ft::iterator_traits<iterator> {
-		public:
-			typedef iterator													iterator_type;
-			typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category;
-			typedef typename ft::iterator_traits<iterator>::value_type			value_type;
-			typedef typename ft::iterator_traits<iterator>::pointer				pointer;
-			typedef typename ft::iterator_traits<iterator>::reference			reference;
-			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
-
-			rbTreeReverseIterator() :
-
-
-		private:
-			iterator_type	_ptr;
-
-
-	};
 }
 #endif //FT_CONTAINERS_RED_BLACK_TREE_ITERATOR_HPP

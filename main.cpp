@@ -17,5 +17,6 @@
 
 int 	main() {
 
+	ft::Map<int, int> a;
 
 }
