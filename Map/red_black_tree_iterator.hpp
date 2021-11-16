@@ -18,10 +18,11 @@ namespace ft {
 			typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::reference			reference;
 			typedef typename ft::iterator<std::bidirectional_iterator_tag, T>::difference_type		difference_type;
 
-			rbTreeIterator() : _ptr(nullptr) {};
-			rbTreeIterator(pointer ptr): _ptr(ptr) {};
+			rbTreeIterator() : _ptr(nullptr), _root(nullptr) {};
+			rbTreeIterator(pointer ptr, pointer root): _ptr(ptr) , _root(root){};
 			rbTreeIterator	&operator=(rbTreeIterator const &other) {
 				_ptr = other._ptr;
+                _root = other._root;
 				return (*this);
 			}
 
@@ -59,7 +60,8 @@ namespace ft {
 			friend bool 	operator!=(const rbTreeIterator &lhs, const rbTreeIterator &rhs) {return (lhs._ptr != rhs._ptr);}
 
 		private:
-			pointer		_ptr;
+			pointer		_root;
+            pointer     _ptr;
 	};
 
 }

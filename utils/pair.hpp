@@ -104,11 +104,11 @@ namespace ft {
 			 * @return *this
 			 */
 			pair&	operator= (const pair& pr) {
-
+                if (this == &other)
+                    return (*this);
 				// TO-DO: Assigns pr as the new content for this.
 				this->first = pr.first;
 				this->second = pr.second;
-
 				return (*this);
 			}
 	};
@@ -133,6 +133,18 @@ namespace ft {
 	 pair<T1, T2>	make_pair (T1 x, T2 y) {
 		 return ( pair<T1,T2>(x,y) );
 	 }
+    template<typename T1, typename T2>
+    bool	operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return (lhs.first == rhs.first && lhs.second == rhs.second); }
+    template<typename T1, typename T2>
+    bool	operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return !(lhs == rhs); }
+    template<typename T1, typename T2>
+    bool	operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return (lhs.first < rhs.first || lhs.second < rhs.second); }
+    template<typename T1, typename T2>
+    bool	operator>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return rhs < lhs; }
+    template<typename T1, typename T2>
+    bool	operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return (lhs == rhs || lhs < rhs); }
+    template<typename T1, typename T2>
+    bool	operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return (lhs == rhs || rhs < lhs); }
 }
 
 #endif

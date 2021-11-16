@@ -228,7 +228,7 @@ namespace ft {
 					 * If allocator_type is an instantiation of the default allocator (which has no state), this
 					 * parameter is not relevant.
 					 */
-					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _compare(comp), _value_compare(value_compare()) , _alloc(alloc){
+					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _rbtree(), _compare(comp), _value_compare(value_compare()) , _alloc(alloc){
 						return ;
 					};
 
@@ -268,10 +268,8 @@ namespace ft {
 					template <class InputIterator>
 									  Map (InputIterator first, InputIterator last,
 										   const key_compare& comp = key_compare(),
-										   const allocator_type& alloc = allocator_type()) {
-									  	_compare = comp;
-									  	_alloc = alloc;
-									  	_value_compare = value_compare();
+										   const allocator_type& alloc = allocator_type()): _rbtree(), _compare(comp),
+                                                                                            _value_compare(value_compare()), _alloc(alloc) {
 									  	for (InputIterator it = first; it != last ; it++) {
 									  		_rbtree.insertData(*it);
 									  	}

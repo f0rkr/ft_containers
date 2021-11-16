@@ -478,7 +478,7 @@ namespace ft {
 					return (nullptr);
 				while (tmp->left)
 					tmp = tmp->left;
-				return (iterator(tmp));
+				return (iterator(tmp, _root));
 			}
 			const_iterator	begin() const {
 				pointer tmp = _root;
@@ -487,7 +487,7 @@ namespace ft {
 					return (nullptr);
 				while (tmp->left)
 					tmp = tmp->left;
-				return (iterator(tmp));
+				return (const_iterator(tmp, _root));
 			}
 
 			/** @brief Return iterator to end
@@ -498,29 +498,17 @@ namespace ft {
 			 *
 			 * @return An iterator to the past-the-end element in the red black tree.
 			 */
-			 iterator	end() {return (nullptr);}
-			 const_iterator	end() const {return (nullptr);}
+			 iterator	end() {return (iterator(nullptr, _root));}
+			 const_iterator	end() const {return (const_iterator(nullptr, _root));}
 
-			 iterator	rbegin() {return (nullptr);}
-			 const_iterator rbegin() const {return (nullptr);}
+			 iterator	rbegin() {return (reverse_iterator(end()));}
+			 const_iterator rbegin() const {return (const_reverse_iterator(end()));}
 
 			 iterator	rend() {
-				 pointer tmp = _root;
-
-				 if (_root == nullptr)
-					 return (nullptr);
-				 while (tmp->left)
-					 tmp = tmp->left;
-				 return (iterator(tmp));
+				 return (reverse_iterator(begin()));
 			 }
 			 const_iterator rend() const {
-				 pointer tmp = _root;
-
-				 if (_root == nullptr)
-					 return (nullptr);
-				 while (tmp->left)
-					 tmp = tmp->left;
-				 return (iterator(tmp));
+				 return (const_reverse_iterator(begin()));
 			 }
 	};
 }
