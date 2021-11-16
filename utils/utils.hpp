@@ -6,10 +6,11 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:37:15 by mashad            #+#    #+#             */
-/*   Updated: 2021/10/25 08:06:58 by                  ###   ########.fr       */
+/*   Updated: 2021/11/15 12:19:27 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+# include <type_traits>
 
 namespace ft {
 	/** @brief Enable type if condition is met

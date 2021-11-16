@@ -6,7 +6,7 @@
 #define FT_CONTAINERS_RED_BLACK_TREE_ITERATOR_HPP
 
 # include <iostream>
-
+# include "../Vector/iterator_traits.hpp"
 namespace ft {
 	
 	template <class T>
@@ -25,17 +25,60 @@ namespace ft {
 				return (*this);
 			}
 
-			reference 	operator*();
-			reference 	operator*() const;
-			pointer		operator->();
-			pointer 	operator->() const;
+			reference 	operator*() {return (*_ptr);}
+			reference 	operator*() const {return (*_ptr);}
+			pointer		operator->() {return (_ptr);}
+			pointer 	operator->() const {return (_ptr);}
 
+			rbTreeIterator	&operator++() {
+				if (_ptr == nullptr)
+						return (nullptr);
+				_ptr = _ptr->_inOrderPredecessor(_ptr);
+				return (*this);
+			}
+			rbTreeIterator		&operator++() {
+				rbTreeIterator	tmp = *this;
 
-			friend bool		operator==(const rbTreeIterator &lhs, const rbTreeIterator &rhs);
-			friend bool 	operator!=(const rbTreeIterator &lhs, const rbTreeIterator &rhs);
+				if (_ptr == nullptr)
+					return (nullptr);
+				_ptr = _ptr->_inOrderPredecessor(_ptr);
+				return (tmp);
+			}
+			rbTreeIterator		&operator--() {
+				if (_ptr == nullptr)
+					return (nullptr);
+				_ptr = _ptr->_inOrderSucessor(_ptr);
+				return (*this);
+			}
+			rbTreeIterator		&operator--() {
+				rbTreeIterator	tmp = *this;
+				_ptr = _ptr->_inOrderSucessor(_ptr);
+				return (tmp);
+			}
+			friend bool		operator==(const rbTreeIterator &lhs, const rbTreeIterator &rhs) {return (lhs._ptr == rhs._ptr);}
+			friend bool 	operator!=(const rbTreeIterator &lhs, const rbTreeIterator &rhs) {return (lhs._ptr != rhs._ptr);}
 
 		private:
 			pointer		_ptr;
+	};
+
+	template <class iterator>
+	class rbTreeReverseIterator: public ft::iterator_traits<iterator> {
+		public:
+			typedef iterator													iterator_type;
+			typedef typename ft::iterator_traits<iterator>::iterator_category	iterator_category;
+			typedef typename ft::iterator_traits<iterator>::value_type			value_type;
+			typedef typename ft::iterator_traits<iterator>::pointer				pointer;
+			typedef typename ft::iterator_traits<iterator>::reference			reference;
+			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
+
+			rbTreeReverseIterator() :
+
+
+		private:
+			iterator_type	_ptr;
+
+
 	};
 }
 #endif //FT_CONTAINERS_RED_BLACK_TREE_ITERATOR_HPP
