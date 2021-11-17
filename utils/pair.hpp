@@ -104,7 +104,7 @@ namespace ft {
 			 * @return *this
 			 */
 			pair&	operator= (const pair& pr) {
-                if (this == &other)
+                if (this == &pr)
                     return (*this);
 				// TO-DO: Assigns pr as the new content for this.
 				this->first = pr.first;

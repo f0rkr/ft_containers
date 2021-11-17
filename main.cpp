@@ -19,4 +19,6 @@ int 	main() {
 
 	ft::Map<int, int> a;
 
+    a.insert(ft::make_pair(0, 10));
+
 }

@@ -314,15 +314,37 @@ namespace ft {
 			 *
 			 * @param alloc Allocator object.
 			 */
-			RBTree (): _root(nullptr) {
+			RBTree (): _root(nullptr), _compare(compare()) {
 				return ;
 			}
-			RBTree(const value_type &pair = value_type()): _root(init_node(pair)) {
-				return ;
-			}
+//			RBTree(const value_type &pair = value_type()): _root(init_node(pair)) {
+//				return ;
+//			}
+            RBTree(const RBTree& x) {
+                *this = x;
+            }
+			~RBTree () {
+                return ;
+            }
+            RBTree& operator=(const RBTree& x) {
+                if (*this == x)
+                    return (*this);
+                clear();
+                _node_allocator = x._node_allocator;
+                _pair_allocator = x._pair_allocator;
+                _compare = x._compare;
+                clone(x._root);
+            }
 
-			~RBTree ();
-
+            void        clone(pointer root) {
+                if (root == nullptr) {
+                    insertData(root->data);
+                    if (root->right != nullptr)
+                        insertData(root->right->data);
+                    clone(root->left);
+                    clone(root->right);
+                }
+            }
 			void 		clear() {
 				if (_root && _root != nullptr) {
 					destroyNode(_root);
