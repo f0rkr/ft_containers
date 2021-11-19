@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 19:00:53 by mashad            #+#    #+#             */
-/*   Updated: 2021/11/16 13:09:03 by                  ###   ########.fr       */
+/*   Updated: 2021/11/19 14:38:20 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "../utils/pair.hpp"
 # include "../utils/utils.hpp"
 # include "RBTree.hpp"
-# include "../Vector/random_access_iterator.hpp"
-# include "../Vector/reverse_iterator.hpp"
+//# include "../Vector/random_access_iterator.hpp"
+//# include "../Vector/reverse_iterator.hpp"
 # include <iostream>
 
 namespace ft {
@@ -55,7 +55,7 @@ namespace ft {
 	 * template is used, which defines the simplest memory allocation model and is value-independent.
 	 * Aliased as member type map::allocator_type.
 	 */
-	template <	class Key, class T, class Compare = ft::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
+	template <	class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 			class Map {
 				public:
 
@@ -82,13 +82,7 @@ namespace ft {
 					 * The third template parameter (Compare)
 					 * @defaults to: less<key_type>
 					 */
-					typedef ft::less<key_type>													key_compare;
-
-					/**
-					 * value_compare
-					 * Nested function class to compare elements
-					 */
-//					typedef  name;
+					typedef std::less<key_type>													key_compare;
 
 
 					/**
@@ -146,14 +140,14 @@ namespace ft {
 					 * a bidirectional iterator to value_type
 					 * @convertible to const_iterator
 					 */
-					typedef typename ft::rbTreeIterator<T>				iterator;
+					typedef typename ft::rbTreeIterator<ft::Node<value_type>, value_type>				iterator;
 
 
 					/**
 					 * const_iterator
 					 * A bidirectional iterator to const value_type
 					 */
-					typedef typename ft::rbTreeIterator<const T>		const_iterator;
+					typedef typename ft::rbTreeIterator<ft::Node<const value_type>, const value_type>		const_iterator;
 
 
 
@@ -161,7 +155,7 @@ namespace ft {
 					 * reverse_iterator
 					 * reverse_iterator<iterator>
 					 */
-					typedef typename ft::reverse_iterator<iterator>							reverse_iterator;
+					typedef typename ft::rbTreeReverseIterator<iterator>							reverse_iterator;
 
 
 
@@ -169,7 +163,7 @@ namespace ft {
 					 * const_reverse_iterator
 					 * reverse_iterator<const_iterator>
 					 */
-					typedef typename ft::reverse_iterator<const iterator>			const_reverse_iterator;
+					typedef typename ft::rbTreeReverseIterator<const iterator>			const_reverse_iterator;
 
 
 					/**
@@ -196,15 +190,15 @@ namespace ft {
 					};
 					typedef size_t																		size_type;
 					typedef ft::RBTree<value_type, value_compare, allocator_type>						tree_type;
-					typedef typename allocator_type::template rebind<tree_type>::other					tree_allocator;
+//					typedef typename allocator_type::template rebind<tree_type>::other					tree_allocator;
 
 
-	private:
+				private:
 					tree_type		_rbtree;
 					key_compare		_compare;
 					value_compare	_value_compare;
 					allocator_type	_alloc;
-					tree_allocator 	_tree_alloc;
+//					tree_allocator 	_tree_alloc;
 				public:
 					/* --------------------------- Member functions --------------------------- */
 
@@ -228,7 +222,7 @@ namespace ft {
 					 * If allocator_type is an instantiation of the default allocator (which has no state), this
 					 * parameter is not relevant.
 					 */
-					explicit Map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _rbtree(), _compare(comp), _value_compare(value_compare()) , _alloc(alloc){
+					explicit Map (const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()): _rbtree(), _compare(comp), _value_compare(value_compare()) , _alloc(alloc){
 						return ;
 					};
 
@@ -271,7 +265,7 @@ namespace ft {
 										   const allocator_type& alloc = allocator_type()): _rbtree(), _compare(comp),
                                                                                             _value_compare(value_compare()), _alloc(alloc) {
 									  	for (InputIterator it = first; it != last ; it++) {
-									  		_rbtree.insertData(*it);
+									  		_rbtree.insert(*it);
 									  	}
 									  }
 
@@ -517,7 +511,8 @@ namespace ft {
 					 * @complixity Logarithmic in size
 					 */
 					mapped_type&	operator[] (const key_type& k) {
-						return (_rbtree.find(k));
+//						return (_rbtree.find(k)->second);
+						return (mapped_type());
 					}
 
 
@@ -571,17 +566,17 @@ namespace ft {
 					 * in general, but linear in size+N if the elements are already sorted according to the same ordering
 					 * criterion used by the container.
 					 */
-					pair<iterator, bool>	insert (const value_type& val) {
-						return _rbtree.insertData(val);
+					pair<iterator,bool> 	insert (const value_type& val) {
+						return _rbtree.insert(val);
 					}
 					iterator				insert (iterator position, const value_type& val) {
 						(void)position;
-						return _rbtree.insertData(val).first;
+						return _rbtree.insert(val).first;
 					}
 					template <class InputIterator>
 							void 			insert (InputIterator first, InputIterator last) {
 								for (InputIterator it = first; it != last; it++) {
-									_rbtree.insertData(*it);
+									_rbtree.insert(*it);
 								}
 							}
 
@@ -900,6 +895,37 @@ namespace ft {
 					 */
 					allocator_type		get_allocator() const;
 			};
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator== ( const Map<Key,T,Compare,Alloc>& lhs,
+							  const Map<Key,T,Compare,Alloc>& rhs ) {
+				return (false);
+			}
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator!= ( const Map<Key,T,Compare,Alloc>& lhs,
+							  const Map<Key,T,Compare,Alloc>& rhs ) {
+				return (false);
+			}
+
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator<  ( const Map<Key,T,Compare,Alloc>& lhs,
+							  const Map<Key,T,Compare,Alloc>& rhs ) {
+				return (false);
+			}
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator<= ( const Map<Key,T,Compare,Alloc>& lhs,
+							  const Map<Key,T,Compare,Alloc>& rhs ) {
+				return (false);
+			}
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator>  ( const Map<Key,T,Compare,Alloc>& lhs,
+							  const Map<Key,T,Compare,Alloc>& rhs ) {
+				return (false);
+			}
+			template <class Key, class T, class Compare, class Alloc>
+			bool operator>= ( const Map<Key,T,Compare,Alloc>& lhs,
+							  const Map<Key,T,Compare,Alloc>& rhs ) {
+				return (false);
+			}
 }
 
 #endif

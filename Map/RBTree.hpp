@@ -6,13 +6,13 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 15:57:43 by mashad            #+#    #+#             */
-/*   Updated: 2021/11/16 13:12:04 by                  ###   ########.fr       */
+/*   Updated: 2021/11/19 14:32:28 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#ifndef RBT_HPP
-#define RBT_HPP
+#ifndef RBTREE_HPP
+#define RBTREE_HPP
 
 # include "../utils/pair.hpp"
 # include "red_black_tree_iterator.hpp"
@@ -63,6 +63,237 @@ namespace ft {
 				return NULL;
 			}
 	};
+	template <class node, class Pair>
+	class rbTreeIterator {
+	public:
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, node>::iterator_category		iterator_category;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, Pair>::value_type			value_type;
+//		typedef typename ft::iterator<std::bidirectional_iterator_tag, node>::pointer				pointer;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, Pair>::reference				reference;
+		typedef typename ft::iterator<std::bidirectional_iterator_tag, Pair>::difference_type		difference_type;
+		typedef ft::Node<const value_type>															const_value_type;
+		typedef ft::Node<value_type>																node_type;
+		typedef node_type*		pointer;
+		rbTreeIterator() : _ptr(nullptr) {};
+		rbTreeIterator(const rbTreeIterator& it): _ptr(it._ptr){
+			return ;
+		}
+		rbTreeIterator(pointer ptr): _ptr(ptr){};
+//			rbTreeIterator	&operator=(rbTreeIterator const &other) {
+//				_ptr = other._ptr;
+//                _root = other._root;
+//				return (*this);
+//			}
+
+		reference 	operator*() {
+			return (_ptr->data);
+		}
+		reference 	operator*() const {return (_ptr->data);}
+		value_type	*operator->() {return (&(_ptr->data));}
+		value_type 	*operator->() const {return (&(_ptr->data));}
+
+		rbTreeIterator	&operator++() {
+			if (_ptr == nullptr)
+				return (nullptr);
+			_ptr = _ptr->_inOrderPredecessor(_ptr);
+			return (*this);
+		}
+		rbTreeIterator		operator++(int) {
+			rbTreeIterator	tmp = *this;
+
+			if (_ptr == nullptr)
+				return (nullptr);
+			_ptr = _ptr->_inOrderPredecessor(_ptr);
+			return (tmp);
+		}
+		rbTreeIterator		&operator--() {
+			if (_ptr == nullptr)
+				return (nullptr);
+			_ptr = _ptr->_inOrderSucessor(_ptr);
+			return (*this);
+		}
+		rbTreeIterator		operator--(int) {
+			rbTreeIterator	tmp = *this;
+			_ptr = _ptr->_inOrderSucessor(_ptr);
+			return (tmp);
+		}
+		friend bool		operator==(const rbTreeIterator &lhs, const rbTreeIterator &rhs) {return (lhs._ptr == rhs._ptr);}
+		friend bool 	operator!=(const rbTreeIterator &lhs, const rbTreeIterator &rhs) {return (lhs._ptr != rhs._ptr);}
+
+		operator rbTreeIterator<const_value_type , const value_type> () const { return rbTreeIterator<const_value_type , const value_type>(_ptr) ; }
+
+	private:
+//			pointer		_root;
+		pointer     _ptr;
+	};
+	template <class Iterator>
+	class rbTreeReverseIterator {
+		public:
+			/* ------------------- Member types ------------------- */
+
+			/** @brief Iterator's type
+			 * @definition Iterator to iterator_type
+			 */
+			typedef Iterator													iterator_type;
+
+			/** @brief Category Iterator
+			 * Preserves Iterator's category
+			 */
+			typedef typename Iterator::value_type								value_type;
+			typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
+
+			/** @brief value type
+			 * Preserves Iterator's value type
+			 */
+//			typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
+
+			/** @brief difference type
+			 * Preservers Iterator's difference type
+			 */
+			typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
+
+			/** @brief pointer
+			 * Preserves Iterator's pointer type
+			 */
+			typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
+			/** @brief reference
+			 * Preserves Iterator's reference type
+			 */
+			typedef typename ft::iterator_traits<Iterator>::reference			reference;
+
+			/** @brief Default constructor
+			 * Construct a reverse iterator that points to no object.
+			 * The internal base iterator is value-initialized
+			 *
+			 * @param none
+			 * @return none
+			 */
+			rbTreeReverseIterator(): _ptr(iterator_type()){
+				return ;
+			}
+
+			/** @brief Initialization constructor
+			 * Constructs a reverse iterator from some original iterator it. The behavior of the
+			 * constructed object replicates the original, except that it iterates through it's
+			 * pointed elements in the reverse order.
+			 *
+			 * @param it An iterator, whose sense of iteration is inverted in the constructed object.
+			 * @Member type iterator_type is the underlying bidirectional iterator type.
+			 * @return none
+			 */
+			explicit	rbTreeReverseIterator(iterator_type it) {
+				_ptr = --it;
+				return ;
+			}
+
+			iterator_type	base() const {
+				iterator_type tmp = _ptr;
+				return (++tmp);
+			}
+
+			/** @brief Copy / Type-cast constructor
+			 * Constructs a reverse iterator from some other reverse iterator. The constructed object
+			 * keeps the same sense of iteration as rev_it.
+			 *
+			 * @tparam Iter
+			 * @param rev_it An iterator of a reverse_iterator type, whose sense of iteration is preserved.
+			 * @return none
+			 */
+			template <class Iter>
+			rbTreeReverseIterator (const rbTreeReverseIterator<Iter>& rev_it) {
+				_ptr = rev_it.base();
+			}
+
+			/** @brief Dereference iterator
+			 * Returns a reference to the element pointed to by the iterator
+			 *
+			 * Internally, the function decreases a copy of it's base iterator and return the results
+			 * of dereferencing it.
+			 *
+			 * The iterator shall point to some object in order to be dereferenceable.
+			 *
+			 * @param none
+			 * @return A reference to the element pointed by the iterator
+			 * Member type reference is an alias of the base iterator's own reference type
+			 */
+			value_type 	operator*() const {
+					return (*_ptr);
+			}
+			value_type	*operator->() const {
+				return &(operator*());
+			}
+			rbTreeReverseIterator	operator=(const rbTreeReverseIterator& x) {
+				if (*this == x)
+					return (*this);
+				_ptr = x._ptr;
+				return (*this);
+			}
+			rbTreeReverseIterator	operator+ (difference_type n) const {
+				return (rbTreeReverseIterator(_ptr - n + 1));
+			}
+			rbTreeReverseIterator&	operator++() {
+				--_ptr;
+				return *this;
+			}
+			rbTreeReverseIterator	operator++(int) {
+				rbTreeReverseIterator tmp = *this;
+				_ptr--;
+				return (tmp);
+			}
+			rbTreeReverseIterator&	operator+= (difference_type n) {
+				_ptr -= n;
+				return (*this);
+			}
+			rbTreeReverseIterator	operator- (difference_type n) const {
+				return (rbTreeReverseIterator(_ptr + (n + 1)));
+			}
+			rbTreeReverseIterator&	operator--() {
+				++_ptr;
+				return *this;
+			}
+			rbTreeReverseIterator	operator--(int) {
+				rbTreeReverseIterator tmp = *this;
+				++_ptr;
+				return (tmp);
+			}
+			rbTreeReverseIterator&	operator-= (difference_type n) {
+				_ptr += n;
+				return (*this);
+			}
+
+	private:
+			iterator_type	_ptr;
+	};
+	template <class Iterator>
+	bool operator== (const rbTreeReverseIterator<Iterator>& lhs,
+					 const rbTreeReverseIterator<Iterator>& rhs) {
+		return (lhs.base() == rhs.base());
+	}
+	template <class Iterator>
+	bool operator!= (const rbTreeReverseIterator<Iterator>& lhs,
+					 const rbTreeReverseIterator<Iterator>& rhs) {
+		return (lhs.base() != rhs.base());
+	}
+	template <class Iterator>
+	bool operator< (const rbTreeReverseIterator<Iterator>& lhs,
+					const rbTreeReverseIterator<Iterator>& rhs) {
+		return (lhs.base() > rhs.base());
+	}
+	template <class Iterator>
+	bool operator<= (const rbTreeReverseIterator<Iterator>& lhs,
+					 const rbTreeReverseIterator<Iterator>& rhs) {
+		return (lhs.base() >= rhs.base());
+	}
+	template <class Iterator>
+	bool operator> (const rbTreeReverseIterator<Iterator>& lhs,
+					const rbTreeReverseIterator<Iterator>& rhs) {
+		return (lhs.base() < rhs.base());
+	}
+	template <class Iterator>
+	bool operator>= (const rbTreeReverseIterator<Iterator>& lhs,
+					 const rbTreeReverseIterator<Iterator>& rhs) {
+		return (lhs.base() <= rhs.base());
+	}
 	/** @brief Red-Black Tree
 	 * Red-Black tree is a self balancing binary search tree in which each node contains an extra bit for
 	 * denoting the color of the node, either red or black.
@@ -82,25 +313,25 @@ namespace ft {
 	template <typename T, typename Compare, typename Alloc>
 	class RBTree {
 		public:
-			typedef T															value_type;
-			typedef size_t														size_type;
-			typedef Alloc														allocator_type;
-			typedef ft::Node<T>													node_type;
-			typedef typename allocator_type::template rebind<node_type>::other		node_allocator;
-			typedef Compare														compare;
-			typedef typename node_allocator::pointer							pointer;
-			typedef typename node_allocator::const_pointer						const_pointer;
-			typedef ft::rbTreeIterator<T >										iterator;
-			typedef ft::rbTreeIterator<const T >								const_iterator;
-			typedef ft::reverse_iterator<iterator>								reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
+			typedef T																	value_type;
+			typedef size_t																size_type;
+			typedef Alloc																allocator_type;
+			typedef ft::Node<T>															node_type;
+			typedef typename allocator_type::template rebind<node_type>::other			node_allocator;
+			typedef Compare																compare;
+			typedef typename node_allocator::pointer									pointer;
+			typedef typename node_allocator::const_pointer								const_pointer;
+			typedef ft::rbTreeIterator<ft::Node<value_type>, value_type>				iterator;
+			typedef ft::rbTreeIterator<ft::Node<const value_type>, const value_type>	const_iterator;
+			typedef ft::reverse_iterator<iterator>										reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>								const_reverse_iterator;
 
 		private:
-			pointer			_root;
-			size_type		_size;
-			node_allocator	_node_allocator;
+			pointer				_root;
+			size_type			_size;
+			node_allocator		_node_allocator;
 			allocator_type		_pair_allocator;
-			compare			_compare;
+			compare				_compare;
 
 
 			pointer 	init_node(const value_type &val) {
@@ -172,7 +403,7 @@ namespace ft {
 				else
 					deleteRBT(root->left, node);
 			}
-			void    		insertFix(pointer &node) {
+			void    		_insertFix(pointer &node) {
 				while (node->parent->color == RED) {
 					if (node->parent->parent->left == node->parent) {
 						if (node->parent->parent->right && node->parent->parent->right->color == RED) {
@@ -182,11 +413,11 @@ namespace ft {
 							node = node->parent->parent;
 						} else if (node->parent->right == node) {
 							node = node->parent;
-							leftRotate(node);
+							rotateLeft(node);
 						} else {
 							node->parent->color = BLACK;
 							node->parent->parent->color = RED;
-							rightRotate(node->parent->parent);
+							rotateRight(node->parent->parent);
 						}
 					}
 					else {
@@ -197,11 +428,11 @@ namespace ft {
 							node = node->parent->parent;
 						} else if (node->parent->left == node) {
 							node = node->parent;
-							rightRotate(node);
+							rotateRight(node);
 						} else {
 							node->parent->color = BLACK;
 							node->parent->parent->color = RED;
-							leftRotate(node->parent->parent);
+							rotateLeft(node->parent->parent);
 						}
 					}
 					if (node == _root)
@@ -209,7 +440,7 @@ namespace ft {
 				}
 				_root->color = BLACK;
 			}
-			void    		deleteFix(pointer &node) {
+			void    		_deleteFix(pointer &node) {
 				if (node->color == RED)
 					return ;
 				if (node == _root) {
@@ -298,14 +529,16 @@ namespace ft {
 				}
 
 			}
-			pointer 		_findRBT(node_type *root, value_type data) {
+			node_type	*_findRBT(node_type *root, value_type data) {
+				if (root == nullptr)
+					return (nullptr);
 				if (data == root->data)
 					return (root);
 				else if (_compare(root->data, data))
 					return (_findRBT(root->right, data));
 				else if (_compare(data, root->data))
 					return (_findRBT(root->left, data));
-				return (NULL);
+				return (nullptr);
 			}
 
 		public:
@@ -317,9 +550,9 @@ namespace ft {
 			RBTree (): _root(nullptr), _compare(compare()) {
 				return ;
 			}
-//			RBTree(const value_type &pair = value_type()): _root(init_node(pair)) {
-//				return ;
-//			}
+			RBTree(const value_type &pair): _root(init_node(pair)) {
+				return ;
+			}
             RBTree(const RBTree& x) {
                 *this = x;
             }
@@ -338,9 +571,9 @@ namespace ft {
 
             void        clone(pointer root) {
                 if (root == nullptr) {
-                    insertData(root->data);
+                    insert(root->data);
                     if (root->right != nullptr)
-                        insertData(root->right->data);
+                        insert(root->right->data);
                     clone(root->left);
                     clone(root->right);
                 }
@@ -454,16 +687,21 @@ namespace ft {
 				}
 				return (parent);
 			}
-			void	insertData(value_type &data) {
-        		node_type *node;
+			ft::pair<iterator,bool>	insert(const value_type &data) {
 
+				node_type *node = _findRBT(_root, data);
+
+				if (node != nullptr)
+					return (ft::make_pair(iterator(node), false));
         		node = _node_allocator.allocate(1);
         		_node_allocator.construct(node, data);
+
         		_root = _insertBST(_root, node);
-        		_fixInsertRBTree(node);
+        		_insertFix(node);
+				return (ft::make_pair(iterator(node), true));
 			}
 			void deleteValue(const value_type &data = value_type()) {
-				node_type *node = find(_root, data);
+				node_type *node = _findRBT(_root, data);
 
 				if (node == nullptr)
 					return ;
@@ -474,6 +712,9 @@ namespace ft {
 					return ;
 				PrintTree(_root);
 				return ;
+			}
+			value_type &find(const value_type &data) {
+				return (_findRBT(_root, data));
 			}
 			void	destroyNode(pointer node) {
 				if (node != nullptr) {
@@ -497,10 +738,10 @@ namespace ft {
 				pointer tmp = _root;
 
 				if (_root == nullptr)
-					return (nullptr);
+					return (iterator(nullptr));
 				while (tmp->left)
 					tmp = tmp->left;
-				return (iterator(tmp, _root));
+				return (iterator(tmp));
 			}
 			const_iterator	begin() const {
 				pointer tmp = _root;
@@ -509,9 +750,11 @@ namespace ft {
 					return (nullptr);
 				while (tmp->left)
 					tmp = tmp->left;
-				return (const_iterator(tmp, _root));
+				return (const_iterator(tmp));
 			}
-
+			size_type	getSize() const {
+				return (_size);
+			}
 			/** @brief Return iterator to end
 			 * Returns an iterator referring to the past-the-end element in the red black tree
 			 *
@@ -520,8 +763,8 @@ namespace ft {
 			 *
 			 * @return An iterator to the past-the-end element in the red black tree.
 			 */
-			 iterator	end() {return (iterator(nullptr, _root));}
-			 const_iterator	end() const {return (const_iterator(nullptr, _root));}
+			 iterator	end() {return (iterator(nullptr));}
+			 const_iterator	end() const {return (const_iterator(nullptr));}
 
 			 iterator	rbegin() {return (reverse_iterator(end()));}
 			 const_iterator rbegin() const {return (const_reverse_iterator(end()));}
@@ -533,5 +776,6 @@ namespace ft {
 				 return (const_reverse_iterator(begin()));
 			 }
 	};
+
 }
 #endif
