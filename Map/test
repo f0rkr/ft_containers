@@ -1,104 +1,170 @@
+Map_tests.cpp:149:50: error: no matching constructor for initialization of 'ft::Map<int, char>::const_iterator' (aka 'rbTreeIterator<RBTree<const pair<const int, char>, less<int>, std::__1::allocator<ft::pair<const int, char> > >, Node<const pair<const int, char> >, const pair<const int, char> >')
+        ft::Map<int, char>::const_iterator c_it, c_ob(my_it);
+                                                 ^    ~~~~~
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'rbTreeIterator<RBTree<pair<...>, [2 * ...]>, Node<pair<...>>, pair<...>>' to 'const rbTreeIterator<RBTree<const pair<...>, [2 * ...]>, Node<const pair<...>>, const pair<...>>' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                ^
+./RBTree.hpp:76:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
+                rbTreeIterator() : _rbtree() , _ptr(nullptr) {
+                ^
+./RBTree.hpp:79:3: note: candidate constructor not viable: requires 2 arguments, but 1 was provided
+                rbTreeIterator(const node_type& Node, const tree_type& rbtree) : _rbtree(rbtree), _ptr(Node) {
+                ^
+Map_tests.cpp:150:14: error: no viable overloaded '='
+        c_it = my_it;
+        ~~~~ ^ ~~~~~
+./RBTree.hpp:88:19: note: candidate function not viable: no known conversion from 'rbTreeIterator<RBTree<pair<...>, [2 * ...]>, Node<pair<...>>, pair<...>>' to 'const rbTreeIterator<RBTree<const pair<...>, [2 * ...]>, Node<const pair<...>>, const pair<...>>' for 1st argument
+                rbTreeIterator  &operator=(rbTreeIterator const &other) {
+                                 ^
+Map_tests.cpp:308:11: error: no viable overloaded '='
+    my_it = my_m.begin();
+    ~~~~~ ^ ~~~~~~~~~~~~
+./RBTree.hpp:88:19: note: candidate function not viable: no known conversion from 'rbTreeIterator<RBTree<pair<...>, [2 * ...]>, Node<pair<...>>, pair<...>>' to 'const rbTreeIterator<RBTree<const pair<...>, [2 * ...]>, Node<const pair<...>>, const pair<...>>' for 1st argument
+                rbTreeIterator  &operator=(rbTreeIterator const &other) {
+                                 ^
+Map_tests.cpp:309:12: error: no viable overloaded '='
+    my_it1 = ++(my_m.begin());
+    ~~~~~~ ^ ~~~~~~~~~~~~~~~~
+./RBTree.hpp:88:19: note: candidate function not viable: no known conversion from 'rbTreeIterator<RBTree<pair<...>, [2 * ...]>, Node<pair<...>>, pair<...>>' to 'const rbTreeIterator<RBTree<const pair<...>, [2 * ...]>, Node<const pair<...>>, const pair<...>>' for 1st argument
+                rbTreeIterator  &operator=(rbTreeIterator const &other) {
+                                 ^
+Map_tests.cpp:369:5: error: no template named 'reverse_iterator' in namespace 'ft'; did you mean simply 'reverse_iterator'?
+    ft::reverse_iterator<std::map<int, char>::iterator> my_rit(m.end()), my_rit1(--m.end());
+    ^~~~~~~~~~~~~~~~~~~~
+    reverse_iterator
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/iterator:650:28: note: 'reverse_iterator' declared here
+class _LIBCPP_TEMPLATE_VIS reverse_iterator
+                           ^
+Map_tests.cpp:374:9: error: no template named 'reverse_iterator' in namespace 'ft'; did you mean simply 'reverse_iterator'?
+        ft::reverse_iterator<std::map<int, char>::iterator> ob(my_rit);
+        ^~~~~~~~~~~~~~~~~~~~
+        reverse_iterator
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/iterator:650:28: note: 'reverse_iterator' declared here
+class _LIBCPP_TEMPLATE_VIS reverse_iterator
+                           ^
+Map_tests.cpp:420:9: error: no template named 'reverse_iterator' in namespace 'ft'; did you mean simply 'reverse_iterator'?
+        ft::reverse_iterator<std::map<int, char>::iterator> my_tmp(my_rit++);
+        ^~~~~~~~~~~~~~~~~~~~
+        reverse_iterator
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/iterator:650:28: note: 'reverse_iterator' declared here
+class _LIBCPP_TEMPLATE_VIS reverse_iterator
+                           ^
+Map_tests.cpp:429:9: error: no template named 'reverse_iterator' in namespace 'ft'; did you mean simply 'reverse_iterator'?
+        ft::reverse_iterator<std::map<int, char>::iterator> my_tmp(my_rit--);
+        ^~~~~~~~~~~~~~~~~~~~
+        reverse_iterator
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/iterator:650:28: note: 'reverse_iterator' declared here
+class _LIBCPP_TEMPLATE_VIS reverse_iterator
+                           ^
+Map_tests.cpp:1550:97: error: no matching function for call to 'next'
+        const ft::Map<std::string, std::string, std::greater<std::string> >::iterator ft_iter = std::next(ft_m1.begin());
+                                                                                                ^~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/iterator:620:1: note: candidate template ignored: requirement '__is_input_iterator<ft::rbTreeIterator<ft::RBTree<ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> >, std::__1::less<std::__1::basic_string<char> >, std::__1::allocator<ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> > > >, ft::Node<ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> > >, ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> > > >::value' was not satisfied [with _InputIter = ft::rbTreeIterator<ft::RBTree<ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> >, std::__1::less<std::__1::basic_string<char> >, std::__1::allocator<ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> > > >, ft::Node<ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> > >, ft::pair<const std::__1::basic_string<char>, std::__1::basic_string<char> > >]
+next(_InputIter __x,
+^
 In file included from Map_tests.cpp:7:
-././Map.hpp:514:28: error: reference to type 'const ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::value_type' (aka 'const ft::pair<const char, int>') could not bind to an lvalue of type 'const ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::key_type' (aka 'const char')
-                                                return (_rbtree.find(k));
-                                                                     ^
+././Map.hpp:515:14: error: non-const lvalue reference to type 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::mapped_type' (aka 'int') cannot bind to a temporary of type 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::mapped_type'
+                                                return (mapped_type());
+                                                       ^~~~~~~~~~~~~~~
 Map_tests.cpp:84:16: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::operator[]' requested here
         m_first[i - 97] = i;
                ^
-./RBTree.hpp:716:36: note: passing argument to parameter 'data' here
-                        iterator find(const value_type &data) {
-                                                        ^
-./RBTree.hpp:534:13: error: no viable conversion from returned value of type 'std::__1::nullptr_t' to function return type 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<Node<ft::pair<const char, int> >, ft::pair<const char, int> >')
-                                        return (nullptr);
-                                               ^~~~~~~~~
-./RBTree.hpp:717:13: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::_findRBT' requested here
-                                return (_findRBT(_root, data));
-                                        ^
-././Map.hpp:514:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::find' requested here
-                                                return (_rbtree.find(k));
-                                                                ^
-Map_tests.cpp:84:16: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::operator[]' requested here
-        m_first[i - 97] = i;
-               ^
-./RBTree.hpp:78:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'const ft::rbTreeIterator<ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> > &' for 1st argument
-                rbTreeIterator(const rbTreeIterator& it): _ptr(it._ptr){
-                ^
-./RBTree.hpp:81:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'ft::rbTreeIterator<ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >::pointer' (aka 'Node<ft::pair<const char, int> > *') for 1st argument
-                rbTreeIterator(pointer ptr): _ptr(ptr){};
-                ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:37:9: note: candidate template ignored: could not match 'type-parameter-0-0 *' against 'ft::rbTreeIterator<ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >'
-        operator _Tp* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:41:9: note: candidate template ignored: could not match 'type-parameter-0-0 type-parameter-0-1::*' against 'ft::rbTreeIterator<ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >'
-        operator _Tp _Up::* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:33:49: note: candidate function
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR operator int __nat::*() const {return 0;}
-                                                ^
 In file included from Map_tests.cpp:7:
-././Map.hpp:464:48: error: no member named 'getSize' in 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >'
-                                        size_type                       size() const {return (_rbtree.getSize());}
-                                                                                              ~~~~~~~ ^
-Map_tests.cpp:90:36: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::size' requested here
+././Map.hpp:352:33: error: no viable conversion from returned value of type 'rbTreeIterator<RBTree<[...], ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::compare, [...]>, [2 * ...]>' to function return type 'rbTreeIterator<RBTree<[...], ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::key_compare, [...]>, [2 * ...]>'
+                                        iterator                        begin() {return _rbtree.begin();}
+                                                                                        ^~~~~~~~~~~~~~~
+Map_tests.cpp:90:94: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::begin' requested here
     cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
-                                   ^
+                                                                                             ^
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, Node<ft::pair<const char, int> >, ft::pair<const char, int> >') to 'const ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> > &' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                ^
+./RBTree.hpp:133:3: note: candidate function
+                operator rbTreeIterator<tree_type, ft::Node<const value_type>, const value_type> () const { return rbTreeIterator<tree_type, ft::Node<const value_type> , const value_type>(_ptr) ; }
+                ^
+./RBTree.hpp:727:14: error: no matching conversion for functional-style cast from 'std::__1::nullptr_t' to 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, Node<ft::pair<const char, int> >, ft::pair<const char, int> >')
+                                        return (iterator(nullptr));
+                                                ^~~~~~~~~~~~~~~~
+././Map.hpp:352:41: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::begin' requested here
+                                        iterator                        begin() {return _rbtree.begin();}
+                                                                                                ^
+Map_tests.cpp:90:94: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::begin' requested here
+    cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
+                                                                                             ^
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'const ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                ^
+./RBTree.hpp:76:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
+                rbTreeIterator() : _rbtree() , _ptr(nullptr) {
+                ^
+./RBTree.hpp:79:3: note: candidate constructor not viable: requires 2 arguments, but 1 was provided
+                rbTreeIterator(const node_type& Node, const tree_type& rbtree) : _rbtree(rbtree), _ptr(Node) {
+                ^
+./RBTree.hpp:730:13: error: no matching conversion for functional-style cast from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::pointer' (aka 'ft::Node<ft::pair<const char, int> > *') to 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, Node<ft::pair<const char, int> >, ft::pair<const char, int> >')
+                                return (iterator(tmp));
+                                        ^~~~~~~~~~~~
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::pointer' (aka 'ft::Node<ft::pair<const char, int> > *') to 'const ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                ^
+./RBTree.hpp:76:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
+                rbTreeIterator() : _rbtree() , _ptr(nullptr) {
+                ^
+./RBTree.hpp:79:3: note: candidate constructor not viable: requires 2 arguments, but 1 was provided
+                rbTreeIterator(const node_type& Node, const tree_type& rbtree) : _rbtree(rbtree), _ptr(Node) {
+                ^
 In file included from Map_tests.cpp:7:
-././Map.hpp:225:113: error: no matching constructor for initialization of 'ft::Map<char, int, classcomp, std::__1::allocator<ft::pair<const char, int> > >::key_compare' (aka 'less<char>')
-                                        explicit Map (const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()): _rbtree(), _compare(comp), _value_compare(value_compare()) , _alloc(alloc){
-                                                                                                                                                   ^        ~~~~
-Map_tests.cpp:102:35: note: in instantiation of member function 'ft::Map<char, int, classcomp, std::__1::allocator<ft::pair<const char, int> > >::Map' requested here
-    ft::Map<char, int, classcomp> m_fourth; // class as Compare
-                                  ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__functional_base:51:29: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'const classcomp' to 'const std::__1::less<char>' for 1st argument
-struct _LIBCPP_TEMPLATE_VIS less : binary_function<_Tp, _Tp, bool>
-                            ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__functional_base:51:29: note: candidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 1 was provided
-In file included from Map_tests.cpp:7:
-././Map.hpp:464:48: error: no member named 'getSize' in 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, classcomp, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >'
-                                        size_type                       size() const {return (_rbtree.getSize());}
-                                                                                              ~~~~~~~ ^
-Map_tests.cpp:104:38: note: in instantiation of member function 'ft::Map<char, int, classcomp, std::__1::allocator<ft::pair<const char, int> > >::size' requested here
-    cond = fourth.size() == m_fourth.size() && cond && compareMaps(fourth.begin(), fourth.end(), m_fourth.begin(), m_fourth.end());
-                                     ^
-In file included from Map_tests.cpp:7:
-././Map.hpp:225:113: error: no matching constructor for initialization of 'ft::Map<char, int, bool (*)(char, char), std::__1::allocator<ft::pair<const char, int> > >::key_compare' (aka 'less<char>')
-                                        explicit Map (const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()): _rbtree(), _compare(comp), _value_compare(value_compare()) , _alloc(alloc){
-                                                                                                                                                   ^        ~~~~
-Map_tests.cpp:108:46: note: in instantiation of member function 'ft::Map<char, int, bool (*)(char, char), std::__1::allocator<ft::pair<const char, int> > >::Map' requested here
-    ft::Map<char, int, bool (*)(char, char)> m_fifth(fn_pt); // function pointer as Compare
-                                             ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__functional_base:51:29: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'bool (*const)(char, char)' to 'const std::__1::less<char>' for 1st argument
-struct _LIBCPP_TEMPLATE_VIS less : binary_function<_Tp, _Tp, bool>
-                            ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__functional_base:51:29: note: candidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 1 was provided
-In file included from Map_tests.cpp:7:
-././Map.hpp:464:48: error: no member named 'getSize' in 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, bool (*)(char, char), std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >'
-                                        size_type                       size() const {return (_rbtree.getSize());}
-                                                                                              ~~~~~~~ ^
-Map_tests.cpp:110:36: note: in instantiation of member function 'ft::Map<char, int, bool (*)(char, char), std::__1::allocator<ft::pair<const char, int> > >::size' requested here
-    cond = fifth.size() == m_fifth.size() && cond && compareMaps(fifth.begin(), fifth.end(), m_fifth.begin(), m_fifth.end());
-                                   ^
-In file included from Map_tests.cpp:7:
-In file included from ././Map.hpp:18:
-./RBTree.hpp:563:27: error: invalid operands to binary expression ('ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >' and 'const ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >')
+././Map.hpp:377:32: error: no viable conversion from returned value of type 'rbTreeIterator<RBTree<[...], ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::compare, [...]>, [2 * ...]>' to function return type 'rbTreeIterator<RBTree<[...], ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::key_compare, [...]>, [2 * ...]>'
+                                        iterator                        end() {return _rbtree.end();}
+                                                                                      ^~~~~~~~~~~~~
+Map_tests.cpp:90:111: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::end' requested here
+    cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
+                                                                                                              ^
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, Node<ft::pair<const char, int> >, ft::pair<const char, int> >') to 'const ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> > &' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                ^
+./RBTree.hpp:133:3: note: candidate function
+                operator rbTreeIterator<tree_type, ft::Node<const value_type>, const value_type> () const { return rbTreeIterator<tree_type, ft::Node<const value_type> , const value_type>(_ptr) ; }
+                ^
+./RBTree.hpp:752:29: error: no matching conversion for functional-style cast from 'std::__1::nullptr_t' to 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, Node<ft::pair<const char, int> >, ft::pair<const char, int> >')
+                         iterator       end() {return (iterator(nullptr));}
+                                                       ^~~~~~~~~~~~~~~~
+././Map.hpp:377:40: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::end' requested here
+                                        iterator                        end() {return _rbtree.end();}
+                                                                                              ^
+Map_tests.cpp:90:111: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::end' requested here
+    cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
+                                                                                                              ^
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'const ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                ^
+./RBTree.hpp:76:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
+                rbTreeIterator() : _rbtree() , _ptr(nullptr) {
+                ^
+./RBTree.hpp:79:3: note: candidate constructor not viable: requires 2 arguments, but 1 was provided
+                rbTreeIterator(const node_type& Node, const tree_type& rbtree) : _rbtree(rbtree), _ptr(Node) {
+                ^
+./RBTree.hpp:549:27: error: invalid operands to binary expression ('ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >' and 'const ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >')
                 if (*this == x)
                     ~~~~~ ^  ~
-././Map.hpp:324:15: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >::operator=' requested here
-                                                _rbtree = x._rbtree;
-                                                        ^
-Map_tests.cpp:113:13: note: in instantiation of member function 'ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::operator=' requested here
-    m_first = ft::Map<char, int>();
-            ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:391:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_code' for 1st argument
+./RBTree.hpp:543:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::operator=' requested here
+                *this = x;
+                      ^
+./RBTree.hpp:82:45: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::RBTree' requested here
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                                                          ^
+Map_tests.cpp:90:86: note: in instantiation of member function 'ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >::rbTreeIterator' requested here
+    cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
+                                                                                     ^
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:391:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_code' for 1st argument
 operator==(const error_code& __x, const error_code& __y) _NOEXCEPT
 ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:398:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_code' for 1st argument
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:398:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_code' for 1st argument
 operator==(const error_code& __x, const error_condition& __y) _NOEXCEPT
 ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:406:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_condition' for 1st argument
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:406:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_condition' for 1st argument
 operator==(const error_condition& __x, const error_code& __y) _NOEXCEPT
 ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:413:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_condition' for 1st argument
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/system_error:413:1: note: candidate function not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >' to 'const std::__1::error_condition' for 1st argument
 operator==(const error_condition& __x, const error_condition& __y) _NOEXCEPT
 ^
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/utility:580:1: note: candidate template ignored: could not match 'pair' against 'RBTree'
@@ -164,7 +230,7 @@ operator==(const basic_string<_CharT, _Traits, _Allocator>& __lhs,
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/string:3847:1: note: candidate template ignored: could not match 'basic_string' against 'RBTree'
 operator==(const basic_string<char, char_traits<char>, _Allocator>& __lhs,
 ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/string:3866:1: note: candidate template ignored: could not match 'const _CharT *' against 'ft::RBTree<ft::pair<const char, int>, ft::Map<char, int, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::value_compare, std::__1::allocator<ft::pair<const char, int> > >'
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/string:3866:1: note: candidate template ignored: could not match 'const _CharT *' against 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >'
 operator==(const _CharT* __lhs,
 ^
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/string:3879:1: note: candidate template ignored: could not match 'basic_string' against 'RBTree'
@@ -173,13 +239,10 @@ operator==(const basic_string<_CharT,_Traits,_Allocator>& __lhs,
 ./../utils/pair.hpp:138:10: note: candidate template ignored: could not match 'pair' against 'RBTree'
     bool        operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return (lhs.first == rhs.first && lhs.second == rhs.second); }
                 ^
-./../Vector/reverse_iterator.hpp:341:8: note: candidate template ignored: could not match 'reverse_iterator' against 'RBTree'
-                bool operator== (const reverse_iterator<Iterator>& lhs,
-                     ^
-./RBTree.hpp:268:7: note: candidate template ignored: could not match 'rbTreeReverseIterator' against 'RBTree'
+./RBTree.hpp:254:7: note: candidate template ignored: could not match 'rbTreeReverseIterator' against 'RBTree'
         bool operator== (const rbTreeReverseIterator<Iterator>& lhs,
              ^
-././Map.hpp:898:9: note: candidate template ignored: could not match 'Map' against 'RBTree'
+././Map.hpp:899:9: note: candidate template ignored: could not match 'Map' against 'RBTree'
                         bool operator== ( const Map<Key,T,Compare,Alloc>& lhs,
                              ^
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/map:1559:1: note: candidate template ignored: could not match 'map' against 'RBTree'
@@ -208,163 +271,68 @@ operator==(
 ^
 In file included from Map_tests.cpp:7:
 In file included from ././Map.hpp:18:
-./RBTree.hpp:692:16: error: no viable conversion from 'ft::RBTree<ft::pair<const int, char>, ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::value_compare, std::__1::allocator<ft::pair<const int, char> > >::iterator' (aka 'rbTreeIterator<Node<ft::pair<const int, char> >, ft::pair<const int, char> >') to 'ft::RBTree<ft::pair<const int, char>, ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::value_compare, std::__1::allocator<ft::pair<const int, char> > >::node_type *' (aka 'Node<ft::pair<const int, char> > *')
-                                node_type *node = _findRBT(_root, data);
-                                           ^      ~~~~~~~~~~~~~~~~~~~~~
-././Map.hpp:569:22: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, char>, ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::value_compare, std::__1::allocator<ft::pair<const int, char> > >::insert' requested here
-                                                return _rbtree.insert(val);
-                                                               ^
-Map_tests.cpp:131:14: note: in instantiation of member function 'ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::insert' requested here
-        my_m.insert(ft::make_pair(i, static_cast<char>(i + 97)));
-             ^
-./RBTree.hpp:123:3: note: candidate function
-                operator rbTreeIterator<const_value_type , const value_type> () const { return rbTreeIterator<const_value_type , const value_type>(_ptr) ; }
+./RBTree.hpp:681:28: error: no matching conversion for functional-style cast from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::node_type *' (aka 'Node<ft::pair<const char, int> > *') to 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, Node<ft::pair<const char, int> >, ft::pair<const char, int> >')
+                                        return (ft::make_pair(iterator(node), false));
+                                                              ^~~~~~~~~~~~~
+./RBTree.hpp:560:21: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::insert' requested here
+                    insert(root->data);
+                    ^
+./RBTree.hpp:555:17: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::clone' requested here
+                clone(x._root);
                 ^
-./RBTree.hpp:534:13: error: no viable conversion from returned value of type 'std::__1::nullptr_t' to function return type 'ft::RBTree<ft::pair<const int, char>, ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::value_compare, std::__1::allocator<ft::pair<const int, char> > >::iterator' (aka 'rbTreeIterator<Node<ft::pair<const int, char> >, ft::pair<const int, char> >')
-                                        return (nullptr);
-                                               ^~~~~~~~~
-./RBTree.hpp:692:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, char>, ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::value_compare, std::__1::allocator<ft::pair<const int, char> > >::_findRBT' requested here
-                                node_type *node = _findRBT(_root, data);
-                                                  ^
-././Map.hpp:569:22: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, char>, ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::value_compare, std::__1::allocator<ft::pair<const int, char> > >::insert' requested here
-                                                return _rbtree.insert(val);
-                                                               ^
-Map_tests.cpp:131:14: note: in instantiation of member function 'ft::Map<int, char, std::__1::less<int>, std::__1::allocator<ft::pair<const int, char> > >::insert' requested here
-        my_m.insert(ft::make_pair(i, static_cast<char>(i + 97)));
-             ^
-./RBTree.hpp:78:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'const ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> > &' for 1st argument
-                rbTreeIterator(const rbTreeIterator& it): _ptr(it._ptr){
+./RBTree.hpp:543:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::operator=' requested here
+                *this = x;
+                      ^
+./RBTree.hpp:82:45: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::RBTree' requested here
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                                                          ^
+Map_tests.cpp:90:86: note: in instantiation of member function 'ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >::rbTreeIterator' requested here
+    cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
+                                                                                     ^
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::node_type *' (aka 'Node<ft::pair<const char, int> > *') to 'const ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
                 ^
-./RBTree.hpp:81:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::pointer' (aka 'Node<ft::pair<const int, char> > *') for 1st argument
-                rbTreeIterator(pointer ptr): _ptr(ptr){};
+./RBTree.hpp:76:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
+                rbTreeIterator() : _rbtree() , _ptr(nullptr) {
                 ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:37:9: note: candidate template ignored: could not match 'type-parameter-0-0 *' against 'ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >'
-        operator _Tp* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:41:9: note: candidate template ignored: could not match 'type-parameter-0-0 type-parameter-0-1::*' against 'ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >'
-        operator _Tp _Up::* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:33:49: note: candidate function
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR operator int __nat::*() const {return 0;}
-                                                ^
-In file included from Map_tests.cpp:7:
-In file included from ././Map.hpp:18:
-./RBTree.hpp:97:12: error: non-const lvalue reference to type 'ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >' cannot bind to a temporary of type 'std::__1::nullptr_t'
-                                return (nullptr);
-                                       ^~~~~~~~~
-Map_tests.cpp:138:14: note: in instantiation of member function 'ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::operator++' requested here
-    my_it1 = ++(my_m.begin());
-             ^
-In file included from Map_tests.cpp:7:
-In file included from ././Map.hpp:18:
-./RBTree.hpp:98:17: error: no member named '_inOrderPredecessor' in 'ft::Node<ft::pair<const int, char> >'
-                        _ptr = _ptr->_inOrderPredecessor(_ptr);
-                               ~~~~  ^
-./RBTree.hpp:123:82: error: no matching conversion for functional-style cast from 'const ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::pointer' (aka 'Node<ft::pair<const int, char> > *const') to 'rbTreeIterator<ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::const_value_type, const ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::value_type>' (aka 'rbTreeIterator<Node<const ft::pair<const int, char> >, const ft::pair<const int, char> >')
-                operator rbTreeIterator<const_value_type , const value_type> () const { return rbTreeIterator<const_value_type , const value_type>(_ptr) ; }
-                                                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Map_tests.cpp:149:55: note: in instantiation of member function 'ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::operator rbTreeIterator' requested here
-        ft::Map<int, char>::const_iterator c_it, c_ob(my_it);
-                                                      ^
-./RBTree.hpp:78:3: note: candidate constructor not viable: no known conversion from 'const ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::pointer' (aka 'Node<ft::pair<const int, char> > *const') to 'const ft::rbTreeIterator<ft::Node<const ft::pair<const int, char> >, const ft::pair<const int, char> >' for 1st argument
-                rbTreeIterator(const rbTreeIterator& it): _ptr(it._ptr){
+./RBTree.hpp:79:3: note: candidate constructor not viable: requires 2 arguments, but 1 was provided
+                rbTreeIterator(const node_type& Node, const tree_type& rbtree) : _rbtree(rbtree), _ptr(Node) {
                 ^
-./RBTree.hpp:81:3: note: candidate constructor not viable: no known conversion from 'const ft::rbTreeIterator<ft::Node<ft::pair<const int, char> >, ft::pair<const int, char> >::pointer' (aka 'Node<ft::pair<const int, char> > *const') to 'ft::rbTreeIterator<ft::Node<const ft::pair<const int, char> >, const ft::pair<const int, char> >::pointer' (aka 'Node<const ft::pair<const int, char> > *') for 1st argument
-                rbTreeIterator(pointer ptr): _ptr(ptr){};
+./RBTree.hpp:687:27: error: no matching conversion for functional-style cast from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::node_type *' (aka 'Node<ft::pair<const char, int> > *') to 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::iterator' (aka 'rbTreeIterator<RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, Node<ft::pair<const char, int> >, ft::pair<const char, int> >')
+                                return (ft::make_pair(iterator(node), true));
+                                                      ^~~~~~~~~~~~~
+./RBTree.hpp:82:3: note: candidate constructor not viable: no known conversion from 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::node_type *' (aka 'Node<ft::pair<const char, int> > *') to 'const ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >' for 1st argument
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
                 ^
-./RBTree.hpp:77:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
-                rbTreeIterator() : _ptr(nullptr) {};
+./RBTree.hpp:76:3: note: candidate constructor not viable: requires 0 arguments, but 1 was provided
+                rbTreeIterator() : _rbtree() , _ptr(nullptr) {
                 ^
-./RBTree.hpp:692:16: error: no viable conversion from 'ft::RBTree<ft::pair<const int, std::__1::basic_string<char> >, ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::value_compare, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::iterator' (aka 'rbTreeIterator<Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > >') to 'ft::RBTree<ft::pair<const int, std::__1::basic_string<char> >, ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::value_compare, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::node_type *' (aka 'Node<ft::pair<const int, std::__1::basic_string<char> > > *')
-                                node_type *node = _findRBT(_root, data);
-                                           ^      ~~~~~~~~~~~~~~~~~~~~~
-././Map.hpp:569:22: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, std::__1::basic_string<char> >, ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::value_compare, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::insert' requested here
-                                                return _rbtree.insert(val);
-                                                               ^
-Map_tests.cpp:172:18: note: in instantiation of member function 'ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::insert' requested here
-            my_m.insert(ft::make_pair(13, "HELLO"));
-                 ^
-./RBTree.hpp:123:3: note: candidate function
-                operator rbTreeIterator<const_value_type , const value_type> () const { return rbTreeIterator<const_value_type , const value_type>(_ptr) ; }
+./RBTree.hpp:79:3: note: candidate constructor not viable: requires 2 arguments, but 1 was provided
+                rbTreeIterator(const node_type& Node, const tree_type& rbtree) : _rbtree(rbtree), _ptr(Node) {
                 ^
-./RBTree.hpp:534:13: error: no viable conversion from returned value of type 'std::__1::nullptr_t' to function return type 'ft::RBTree<ft::pair<const int, std::__1::basic_string<char> >, ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::value_compare, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::iterator' (aka 'rbTreeIterator<Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > >')
-                                        return (nullptr);
-                                               ^~~~~~~~~
-./RBTree.hpp:692:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, std::__1::basic_string<char> >, ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::value_compare, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::_findRBT' requested here
+./RBTree.hpp:523:14: error: no matching function for call to object of type 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::compare' (aka 'std::__1::less<char>')
+                                else if (_compare(root->data, data))
+                                         ^~~~~~~~
+./RBTree.hpp:678:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::_findRBT' requested here
                                 node_type *node = _findRBT(_root, data);
                                                   ^
-././Map.hpp:569:22: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, std::__1::basic_string<char> >, ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::value_compare, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::insert' requested here
-                                                return _rbtree.insert(val);
-                                                               ^
-Map_tests.cpp:172:18: note: in instantiation of member function 'ft::Map<int, std::__1::basic_string<char>, std::__1::less<int>, std::__1::allocator<ft::pair<const int, std::__1::basic_string<char> > > >::insert' requested here
-            my_m.insert(ft::make_pair(13, "HELLO"));
-                 ^
-./RBTree.hpp:78:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'const ft::rbTreeIterator<ft::Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > > &' for 1st argument
-                rbTreeIterator(const rbTreeIterator& it): _ptr(it._ptr){
+./RBTree.hpp:560:21: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::insert' requested here
+                    insert(root->data);
+                    ^
+./RBTree.hpp:555:17: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::clone' requested here
+                clone(x._root);
                 ^
-./RBTree.hpp:81:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'ft::rbTreeIterator<ft::Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > >::pointer' (aka 'Node<ft::pair<const int, std::__1::basic_string<char> > > *') for 1st argument
-                rbTreeIterator(pointer ptr): _ptr(ptr){};
-                ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:37:9: note: candidate template ignored: could not match 'type-parameter-0-0 *' against 'ft::rbTreeIterator<ft::Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > >'
-        operator _Tp* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:41:9: note: candidate template ignored: could not match 'type-parameter-0-0 type-parameter-0-1::*' against 'ft::rbTreeIterator<ft::Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > >'
-        operator _Tp _Up::* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:33:49: note: candidate function
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR operator int __nat::*() const {return 0;}
-                                                ^
-In file included from Map_tests.cpp:7:
-In file included from ././Map.hpp:18:
-./RBTree.hpp:97:12: error: non-const lvalue reference to type 'ft::rbTreeIterator<ft::Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > >' cannot bind to a temporary of type 'std::__1::nullptr_t'
-                                return (nullptr);
-                                       ^~~~~~~~~
-Map_tests.cpp:202:91: note: in instantiation of member function 'ft::rbTreeIterator<ft::Node<ft::pair<const int, std::__1::basic_string<char> > >, ft::pair<const int, std::__1::basic_string<char> > >::operator++' requested here
-            for (ft::Map<int, std::string>::iterator it = ft_m.begin(); it != ft_m.end(); ++it)
-                                                                                          ^
-In file included from Map_tests.cpp:7:
-In file included from ././Map.hpp:18:
-./RBTree.hpp:98:17: error: no member named '_inOrderPredecessor' in 'ft::Node<ft::pair<const int, std::__1::basic_string<char> > >'
-                        _ptr = _ptr->_inOrderPredecessor(_ptr);
-                               ~~~~  ^
-./RBTree.hpp:692:16: error: no viable conversion from 'ft::RBTree<ft::pair<const int, int>, ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::iterator' (aka 'rbTreeIterator<Node<ft::pair<const int, int> >, ft::pair<const int, int> >') to 'ft::RBTree<ft::pair<const int, int>, ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::node_type *' (aka 'Node<ft::pair<const int, int> > *')
-                                node_type *node = _findRBT(_root, data);
-                                           ^      ~~~~~~~~~~~~~~~~~~~~~
-././Map.hpp:569:22: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, int>, ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::insert' requested here
-                                                return _rbtree.insert(val);
-                                                               ^
-Map_tests.cpp:212:19: note: in instantiation of member function 'ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::insert' requested here
-                m.insert(ft::make_pair(myints[i], i));
-                  ^
-./RBTree.hpp:123:3: note: candidate function
-                operator rbTreeIterator<const_value_type , const value_type> () const { return rbTreeIterator<const_value_type , const value_type>(_ptr) ; }
-                ^
-./RBTree.hpp:534:13: error: no viable conversion from returned value of type 'std::__1::nullptr_t' to function return type 'ft::RBTree<ft::pair<const int, int>, ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::iterator' (aka 'rbTreeIterator<Node<ft::pair<const int, int> >, ft::pair<const int, int> >')
-                                        return (nullptr);
-                                               ^~~~~~~~~
-./RBTree.hpp:692:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, int>, ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::_findRBT' requested here
-                                node_type *node = _findRBT(_root, data);
-                                                  ^
-././Map.hpp:569:22: note: in instantiation of member function 'ft::RBTree<ft::pair<const int, int>, ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::insert' requested here
-                                                return _rbtree.insert(val);
-                                                               ^
-Map_tests.cpp:212:19: note: in instantiation of member function 'ft::Map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::insert' requested here
-                m.insert(ft::make_pair(myints[i], i));
-                  ^
-./RBTree.hpp:78:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'const ft::rbTreeIterator<ft::Node<ft::pair<const int, int> >, ft::pair<const int, int> > &' for 1st argument
-                rbTreeIterator(const rbTreeIterator& it): _ptr(it._ptr){
-                ^
-./RBTree.hpp:81:3: note: candidate constructor not viable: no known conversion from 'std::__1::nullptr_t' to 'ft::rbTreeIterator<ft::Node<ft::pair<const int, int> >, ft::pair<const int, int> >::pointer' (aka 'Node<ft::pair<const int, int> > *') for 1st argument
-                rbTreeIterator(pointer ptr): _ptr(ptr){};
-                ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:37:9: note: candidate template ignored: could not match 'type-parameter-0-0 *' against 'ft::rbTreeIterator<ft::Node<ft::pair<const int, int> >, ft::pair<const int, int> >'
-        operator _Tp* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:41:9: note: candidate template ignored: could not match 'type-parameter-0-0 type-parameter-0-1::*' against 'ft::rbTreeIterator<ft::Node<ft::pair<const int, int> >, ft::pair<const int, int> >'
-        operator _Tp _Up::* () const {return 0;}
-        ^
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__nullptr:33:49: note: candidate function
-    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR operator int __nat::*() const {return 0;}
-                                                ^
+./RBTree.hpp:543:23: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::operator=' requested here
+                *this = x;
+                      ^
+./RBTree.hpp:82:45: note: in instantiation of member function 'ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >::RBTree' requested here
+                rbTreeIterator(const rbTreeIterator& x) : _rbtree(x._rbtree) , _ptr(x._ptr) {
+                                                          ^
+Map_tests.cpp:90:86: note: in instantiation of member function 'ft::rbTreeIterator<ft::RBTree<ft::pair<const char, int>, std::__1::less<char>, std::__1::allocator<ft::pair<const char, int> > >, ft::Node<ft::pair<const char, int> >, ft::pair<const char, int> >::rbTreeIterator' requested here
+    cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
+                                                                                     ^
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/__functional_base:54:10: note: candidate function not viable: no known conversion from 'ft::pair<const char, int>' to 'const char' for 1st argument
+    bool operator()(const _Tp& __x, const _Tp& __y) const
+         ^
 fatal error: too many errors emitted, stopping now [-ferror-limit=]
 20 errors generated.

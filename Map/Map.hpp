@@ -6,7 +6,7 @@
 /*   By: mashad <mashad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 19:00:53 by mashad            #+#    #+#             */
-/*   Updated: 2021/11/19 14:38:20 by                  ###   ########.fr       */
+/*   Updated: 2021/11/19 18:24:35 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <iostream>
 
 namespace ft {
+	
 	/** Map template
 	 * Maps are associative containers that store elements formed by a combination of a key
 	 * value and a mapped value, following a specific order.
@@ -61,135 +62,45 @@ namespace ft {
 
 					/* --------------------------- Member types --------------------------- */
 
-
+					
 					/**
 					 * key_type
 					 * The first template parameter (Key)
 					 */
-					typedef Key																key_type;
-
-					/**
-					 * mapped_type
-					 * The second template parameter (T)
-					 */
-					typedef T																mapped_type;
-
-
-					typedef ft::pair<const key_type, mapped_type>							value_type;
-
-					/**
-					 * key_compare
-					 * The third template parameter (Compare)
-					 * @defaults to: less<key_type>
-					 */
-					typedef std::less<key_type>													key_compare;
-
-
-					/**
-					 * allocator_type
-					 * The forth template parameter (Alloc)
-					 * @defaults to : allocator<value_type>
-					 */
-					typedef Alloc															allocator_type;
-
-
-					/**
-					 * reference
-					 * allocator_type::reference
-					 * @defaults: allocator value_type&
-					 */
-					typedef typename allocator_type::reference										reference;
-
-
-
-
-
-					/**
-					  * const_reference
-					  * allocator_type::const_reference
-					  * @defaults: allocator const value_type&
-					  */
-					typedef typename allocator_type::const_reference								const_reference;
-
-
-
-
-
-					/**
-					  * pointer
-					  * allocator_type::pointer
-					  * @defaults: allocator value_type*
-					  */
-					typedef typename allocator_type::pointer										pointer;
-
-
-
-
-
-					/**
-					   * const_pointer
-					   * allocator_type::const_pointer
-					   * @defaults: allocator const value_type*
-					   */
-					typedef typename allocator_type::const_pointer								const_pointer;
-
-
-
-					/**
-					 * iterator
-					 * a bidirectional iterator to value_type
-					 * @convertible to const_iterator
-					 */
-					typedef typename ft::rbTreeIterator<ft::Node<value_type>, value_type>				iterator;
-
-
-					/**
-					 * const_iterator
-					 * A bidirectional iterator to const value_type
-					 */
-					typedef typename ft::rbTreeIterator<ft::Node<const value_type>, const value_type>		const_iterator;
-
-
-
-					/**
-					 * reverse_iterator
-					 * reverse_iterator<iterator>
-					 */
-					typedef typename ft::rbTreeReverseIterator<iterator>							reverse_iterator;
-
-
-
-					/**
-					 * const_reverse_iterator
-					 * reverse_iterator<const_iterator>
-					 */
-					typedef typename ft::rbTreeReverseIterator<const iterator>			const_reverse_iterator;
-
+					typedef Key																						key_type;
+					typedef T																						mapped_type;
+					typedef Alloc																					allocator_type;
+					typedef size_t																					size_type;
+					typedef ptrdiff_t 																				difference_type;
+					typedef std::less<key_type>																		key_compare;
+					typedef ft::pair<const key_type, mapped_type>													value_type;
+					class value_compare {
+						public:
+							typedef 	key_compare 	comp;
+							bool	operator()(const value_type& x, const value_type& y) const {
+								return comp()(x.first, y.first);
+							}
+					};
+					typedef typename allocator_type::pointer														pointer;
+					typedef typename ft::RBTree<value_type, key_compare, allocator_type>							tree_type;
+					typedef typename allocator_type::reference														reference;
+					typedef typename allocator_type::const_pointer													const_pointer;
+					typedef typename allocator_type::const_reference												const_reference;
+					typedef typename ft::rbTreeIterator<tree_type, ft::Node<value_type>, value_type>				iterator;
+					typedef typename ft::rbTreeReverseIterator<iterator>											reverse_iterator;
+					typedef typename ft::rbTreeIterator<tree_type, ft::Node<const value_type>, const value_type>				const_iterator;
+					typedef typename ft::rbTreeReverseIterator<const_iterator>										const_reverse_iterator;
 
 					/**
 					 * difference_type
 					 * A signed integral type, identical to:
 					 * iterator_traits<iterator>::difference_type
 					 */
-					typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
-
-
-
-
 					/**
 					 * size_type
 					 * An unsigned integral type that can represent any non-negative value of
 					 * difference_type
 					 */
-					class value_compare {
-						public:
-							typedef key_compare		comp;
-							bool	operator()(const value_type& x, const value_type& y) const {
-								return comp()(x.first, y.first);
-							}
-					};
-					typedef size_t																		size_type;
-					typedef ft::RBTree<value_type, value_compare, allocator_type>						tree_type;
 //					typedef typename allocator_type::template rebind<tree_type>::other					tree_allocator;
 
 
@@ -198,7 +109,6 @@ namespace ft {
 					key_compare		_compare;
 					value_compare	_value_compare;
 					allocator_type	_alloc;
-//					tree_allocator 	_tree_alloc;
 				public:
 					/* --------------------------- Member functions --------------------------- */
 
