@@ -141,12 +141,12 @@ namespace ft {
 	template <class T> struct less : binary_function <T,T,bool> {
 		bool operator() (const T& x, const T& y) const {return x<y;}
 	};
-    template< typename T>
-    void	swap( T &x, T &y) {
-        T	tmp;
-
-        tmp = x;
-        x = y;
-        y = tmp;
-    }
+//    template< typename T>
+//    void	swap( T &x, T &y) {
+//        T	tmp;
+//
+//        tmp = x;
+//        x = y;
+//        y = tmp;
+//    }
 }

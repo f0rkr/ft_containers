@@ -6,13 +6,14 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/10 08:17:55 by                   #+#    #+#             */
-/*   Updated: 2021/10/10 10:24:03 by                  ###   ########.fr       */
+/*   Updated: 2021/11/19 10:50:54 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #ifndef PAIR_HPP
 #define PAIR_HPP
+# include <iostream>
 
 
 /** @brief Implementation for std::pair and std::make_pair template objects
@@ -50,7 +51,7 @@ namespace ft {
 			 *
 			 * @param none
 			 * @return none
-			 * @complixity none
+			 * @complixity Constant
 			 */
 			pair() { return ; }
 
@@ -66,8 +67,8 @@ namespace ft {
 			 *  or of a pair type whose elements' types are implicitly convertible to those
 			 *  in the pair being constructed.
 			 */
-			template< class U, class V>pair (const pair<U, V>& pr) {
-				*this = pr;
+			template <class U, class V>
+			pair(const pair<U, V>& pr): first(pr.first), second(pr.second) {
 				return ;
 			}
 
@@ -130,8 +131,8 @@ namespace ft {
 	 * The template parameters can be implicitly deduced.
 	 */
 	 template <class T1, class T2>
-	 pair<T1, T2>	make_pair (T1 x, T2 y) {
-		 return ( pair<T1,T2>(x,y) );
+	 ft::pair<T1, T2>	make_pair (T1 x, T2 y) {
+		 return (ft::pair<T1,T2>(x,y));
 	 }
     template<typename T1, typename T2>
     bool	operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return (lhs.first == rhs.first && lhs.second == rhs.second); }
