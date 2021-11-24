@@ -1547,7 +1547,7 @@ void testModifiers()
         const std::pair<std::string, std::string> &ref = *(m1.begin());
         const std::map<std::string, std::string, std::greater<std::string> >::iterator iter = std::next(m1.begin());
         const ft::pair<std::string, std::string> &ft_ref = *(ft_m1.begin());
-        const ft::Map<std::string, std::string, std::greater<std::string> >::iterator ft_iter = std::next(ft_m1.begin());
+        const ft::Map<std::string, std::string, std::greater<std::string> >::iterator ft_iter = ft_m1.begin();
 
         // std::cout << "──────── before swap ────────\n"
         //           << "m1: " << m1 << "m2: " << m2 << "ref: " << ref
