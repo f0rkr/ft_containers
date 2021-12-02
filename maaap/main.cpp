@@ -11,11 +11,12 @@ int	main() {
 	a.insert(ft::make_pair(3, 20));
 	a.insert(ft::make_pair(4, 20));
 
-	ft::Map<int, int>::iterator it = a.begin();
-	for (it = a.begin(); it != a.end() ; it++)
-		std::cout << it->first << " " << it->second<< std::endl;
+	a.print();
 
-	
+	a.erase(3);
+
+	a.print();
+
 
 	// it++;
 //	if (it)

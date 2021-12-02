@@ -221,6 +221,9 @@ namespace ft {
 		allocator_type		get_allocator() const {
 			return (_alloc);
 		}
+		void				print() {
+			_rbtree.print();
+		}
 	};
 		template <class Key, class T, class Compare, class Alloc>
 	bool operator== ( const ft::Map<Key,T,Compare,Alloc>& lhs,
