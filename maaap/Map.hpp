@@ -73,7 +73,10 @@ namespace ft {
 			}
 
 		Map (const Map& x) {
-			*this = x;
+			if (this == &x)
+				return ;
+			_rbtree.clear();
+			_rbtree = x._rbtree;
 		}
 
 		~Map() {
@@ -81,7 +84,6 @@ namespace ft {
 
 		Map&	operator=(const Map& x) {
 			if (*this != x) {
-				_rbtree.clear();
 				_rbtree = x._rbtree;
 				_alloc = x._alloc;
 				_compare = x._compare;
@@ -131,7 +133,13 @@ namespace ft {
 		}
 
 		mapped_type&	operator[] (const key_type& k) {
-			return (_rbtree.find(k)->data->second);
+			node_pointer node = _rbtree.find(k);
+			
+			if (node == nullptr) {
+				ft::pair<iterator, bool> it = insert(ft::make_pair(k, mapped_type()));
+				return (it.first->second);
+			}
+			return (node->data->second);
 		}
 
 		ft::pair<iterator, bool>	insert (const value_type& val) {
@@ -170,7 +178,9 @@ namespace ft {
 			std::swap(_alloc, x._alloc);
 			std::swap(_compare, x._compare);
 			std::swap(_value_compare, x._value_compare);
-			std::swap(_rbtree, x._rbtree);
+			tree_type tmp = _rbtree;
+			_rbtree = x._rbtree;
+			x._rbtree = tmp;
 		}
 
 		void 	clear() {
@@ -225,36 +235,69 @@ namespace ft {
 			_rbtree.print();
 		}
 	};
+	template<class lhit, class rhit>
+	bool equal(lhit first1, lhit last1, rhit first2)
+	{
+		while (first1 != last1) {
+		  if (!(*first1 == *first2))
+		    return false;
+		  ++first1; ++first2;
+		}
+		return true;
+	}
+	template <class InputIterator1, class InputIterator2>
+  	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+                                InputIterator2 first2, InputIterator2 last2){
+		while (first1!=last1)
+		{
+		  if (first2==last2 || *first2<*first1)
+			  return false;
+		  else if (*first1<*first2)
+			  return true;
+		  ++first1; ++first2;
+		}
+		return (first2!=last2);
+	}
 		template <class Key, class T, class Compare, class Alloc>
 	bool operator== ( const ft::Map<Key,T,Compare,Alloc>& lhs,
 						const ft::Map<Key,T,Compare,Alloc>& rhs ) {
-							return (true);
+							if (lhs.size() != rhs.size())
+								return (lhs.size() == rhs.size());
+							return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 						}
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator!= ( const ft::Map<Key,T,Compare,Alloc>& lhs,
 						const ft::Map<Key,T,Compare,Alloc>& rhs ) {
-							return (true);
+							return (!(lhs == rhs));
 						}
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator<  ( const ft::Map<Key,T,Compare,Alloc>& lhs,
 						const ft::Map<Key,T,Compare,Alloc>& rhs ) {
-							return (true);
+							return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 						}
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator<= ( const ft::Map<Key,T,Compare,Alloc>& lhs,
 						const ft::Map<Key,T,Compare,Alloc>& rhs ) {
-							return (true);
+							if (lhs  < rhs || lhs == rhs)
+            					return (true);
+        					return (false);
 						}
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator>  ( const ft::Map<Key,T,Compare,Alloc>& lhs,
 						const ft::Map<Key,T,Compare,Alloc>& rhs ){
-							return (true);
+							return (!(lhs <= rhs));
 						}
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator>= ( const ft::Map<Key,T,Compare,Alloc>& lhs,
 						const ft::Map<Key,T,Compare,Alloc>& rhs ) {
-							return (true);
+							return (!(lhs < rhs));
 						}
+	template <class Key, class T, class Compare, class Alloc>
+  	void swap (Map<Key,T,Compare,Alloc>& x, Map<Key,T,Compare,Alloc>& y) {
+		  x.swap(y);
+		  return ;
+	  }
+
 }
 
 #endif

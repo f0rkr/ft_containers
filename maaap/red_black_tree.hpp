@@ -43,13 +43,37 @@ namespace ft {
 			allocator_type().construct(pair_node, data);
 			return (pair_node);
 		}
-		void			destroy() {
-			allocator_type().destroy(data);
-			allocator_type().deallocate(data, 1);
+		node_pointer			destroy() {
+			if (!data) {
+				allocator_type().destroy(data);
+				allocator_type().deallocate(data, 1);
+			}
+			return (nullptr);
+		}
+		Node() : left(nullptr), right(nullptr), parent(nullptr), data(nullptr), color(RED) {
 			return ;
 		}
 		explicit Node(const value_type& data) : left(nullptr), right(nullptr), parent(nullptr), data(create_pair(data)), color(RED) {
 			return ;
+		}
+		explicit Node(const Node *node) {
+			if (!node || node == this)
+				return ;
+			left = node->left;
+			right = node->right;
+			parent = node->parent;
+			data = allocator_type().allocate(1);
+			allocator_type().construct(data, *(node->data));
+			return ;
+		}
+		~Node() {
+			// if (!this)
+			// 	return ;
+			// if (left)
+			// 	left = left->destroy();
+			// if (right)
+			// 	right = right->destroy();
+			// this->destroy();
 		}
 		bool	isLeft() {
 			if (parent && parent->left)
@@ -114,7 +138,9 @@ namespace ft {
 			}
 
 			reference 	operator*() const {
-				return (*(_ptr->data));
+					if (_ptr == nullptr)
+						return ((reference)*_ptr);
+					return (*(_ptr->data));
 			}
 			pointer	operator->() const {
 				return (&(operator*()));
@@ -139,7 +165,10 @@ namespace ft {
 				if (_rbtree == nullptr)
 					return (*this);
 
-				_ptr = _rbtree->inorderPredecessor(_ptr);
+				if (_ptr == nullptr)
+					_ptr = _rbtree->max(_rbtree->getRoot());
+				else
+					_ptr = _rbtree->inorderPredecessor(_ptr);
 				return (*this);
 			}
 			rbt_iterator	operator--(int) {
@@ -147,7 +176,10 @@ namespace ft {
 
 				if (_rbtree == nullptr)
 					return (*this);
-				_ptr = _rbtree->inorderPredecessor(_ptr);
+				if (_ptr == nullptr)
+					_ptr = _rbtree->max(_rbtree->getRoot());
+				else
+					_ptr = _rbtree->inorderPredecessor(_ptr);
 				return (tmp);
 			}
 
@@ -237,11 +269,12 @@ namespace ft {
 			}
 			reference			operator[] (difference_type n) const {return (_ptr[n]);}
 
-			friend bool		operator==(const rbt_reverse_iterator& lhs, const rbt_reverse_iterator& rhs) {return ( lhs._ptr == rhs._ptr);}
+			friend bool		operator==(const rbt_reverse_iterator& lhs, const rbt_reverse_iterator& rhs) {return ( lhs.base() == rhs.base());}
 			friend bool 	operator!=(const rbt_reverse_iterator& lhs, const rbt_reverse_iterator& rhs) {return (!(lhs == rhs));}
 		protected:
 			iterator_type	_ptr;
 	};
+
 	template <class Pair, class Compare, typename Alloc>
 	class red_black_tree {
 		public:
@@ -295,17 +328,17 @@ namespace ft {
 			void 			_remove(node_type *&root, node_type *&node) {
 				if (node == nullptr)
 					return ;
-				if (root->data == node->data) {
+				if (root && root->data == node->data) {
 					if (!(node->left) && !(node->right)) { // if node has no children then simply delete it
 						if (node == _root) {
 							node = _destroy(node);
 							return ;
 						}
 						_removeFix(node);
-						node->left = _destroy(node->left);
-						node->right = _destroy(node->right);
-						_node_allocator.destroy(&(*node));
-						_node_allocator.deallocate(&(*node), 1);
+						// node->left = _destroy(node->left);
+						// node->right = _destroy(node->right);
+						// _node_allocator.destroy(&(*node));
+						// _node_allocator.deallocate(&(*node), 1);
 						node = nullptr;
 					} else { // if not get either it's predecessor or successor
 						if (node->left) {
@@ -320,9 +353,9 @@ namespace ft {
 					}
 					return ;
 				}
-				if (root->data < node->data)
+				if (_compare(root->data->first, node->data->first))
 					_remove(root->right, node);
-				else
+				else if (_compare(node->data->first, root->data->first))
 					_remove(root->left, node);
 				return ;
 			}
@@ -489,6 +522,8 @@ namespace ft {
 			}
 
 			red_black_tree(const red_black_tree& x) {
+				if (this != &x)
+					*this = x;
 				return ;
 			}
 
@@ -497,6 +532,15 @@ namespace ft {
 			}
 
 			red_black_tree&		operator=(const red_black_tree& x) {
+				if (_root != nullptr) {
+					_node_allocator.destroy(_root);
+					_node_allocator.deallocate(_root, 1);
+				}
+				_root = _node_allocator.allocate(1);
+				_node_allocator.construct(_root, x._root);
+				_size = x._size;
+				_compare = x._compare;
+				_node_allocator = x._node_allocator;
 				return (*this);
 			}
 
@@ -611,6 +655,7 @@ namespace ft {
 					return (node);
 				node = create_node(data);
 				_root = _insert(_root, node);
+				_size++;
 				if (node->parent == nullptr) {
 					node->color = BLACK;
 					return (node);
@@ -619,7 +664,6 @@ namespace ft {
 					return (node);
 				}
 				_insertFix(node);
-				_size++;
 				return (node);
 			}
 			size_type		remove(const key_type& data) {
@@ -647,7 +691,6 @@ namespace ft {
 			const_iterator 	end() const {
 				return (iterator(nullptr, this));
 			}
-
 			reverse_iterator	rbegin(){
 				return (reverse_iterator(end()));
 			}
@@ -679,6 +722,9 @@ namespace ft {
 					print_helper(prefix + (isLeft ? "│   " : "    "), node->right, true);
 					print_helper(prefix + (isLeft ? "│   " : "    "), node->left, false);
 				}
+			}
+			node_pointer	getRoot() const {
+				return (_root);
 			}
 			void print()
 			{
