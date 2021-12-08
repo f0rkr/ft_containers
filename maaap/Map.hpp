@@ -33,10 +33,9 @@ namespace ft {
 		class value_compare {
 		public:
 			bool operator()(const value_type& x, const value_type& y) const {
-				return key_compare()(x.second, y.second);
+				return key_compare()(x.first, y.first);
 			}
 		};
-
 		typedef ft::Node<value_type, allocator_type>						node_type;
 		typedef node_type*									node_pointer;
 		typedef typename	allocator_type::pointer			pointer;
@@ -143,11 +142,11 @@ namespace ft {
 		}
 
 		ft::pair<iterator, bool>	insert (const value_type& val) {
-			node_pointer node = _rbtree.insert(val);
+			node_pointer node = _rbtree.find(val.first);
 
-			if (node == nullptr)
+			if (node != nullptr)
 				return (ft::make_pair(iterator(node, &_rbtree), false));
-			return (ft::make_pair(iterator(node, &_rbtree), true));
+			return (ft::make_pair(iterator(_rbtree.insert(val), &_rbtree), true));
 		}
 
 		iterator 	insert(iterator position, const value_type& val) {
@@ -178,9 +177,7 @@ namespace ft {
 			std::swap(_alloc, x._alloc);
 			std::swap(_compare, x._compare);
 			std::swap(_value_compare, x._value_compare);
-			tree_type tmp = _rbtree;
-			_rbtree = x._rbtree;
-			x._rbtree = tmp;
+			_rbtree.swap(x._rbtree);
 		}
 
 		void 	clear() {
@@ -195,10 +192,18 @@ namespace ft {
 		}
 
 		iterator		find(const key_type& k) {
-			return (iterator(_rbtree.find(k), &_rbtree));
+			node_pointer node = _rbtree.find(k);
+			
+			if (node != nullptr)
+				return (iterator(node, &_rbtree));
+			return (end());
 		}
 		const_iterator	find(const key_type& k) const {
-			return (iterator(_rbtree.find(k), &_rbtree));
+			node_pointer node = _rbtree.find(k);
+			
+			if (node != nullptr)
+				return (const_iterator(node, &_rbtree));
+			return (end());
 		}
 
 		size_type		count(const key_type& k) const {

@@ -67,13 +67,11 @@ namespace ft {
 			return ;
 		}
 		~Node() {
-			// if (!this)
-			// 	return ;
-			// if (left)
-			// 	left = left->destroy();
-			// if (right)
-			// 	right = right->destroy();
-			// this->destroy();
+			if (left)
+				left = left->destroy();
+			if (right)
+				right = right->destroy();
+			destroy();
 		}
 		bool	isLeft() {
 			if (parent && parent->left)
@@ -148,7 +146,10 @@ namespace ft {
 			rbt_iterator	operator++() {
 				if (_rbtree == nullptr)
 					return (*this);
-				_ptr = _rbtree->inorderSuccessor(_ptr);
+				if (_ptr == nullptr && _rbtree)
+					_ptr = _rbtree->min(_rbtree->getRoot());
+				else
+					_ptr = _rbtree->inorderSuccessor(_ptr);
 				return (*this);
 			}
 
@@ -157,7 +158,7 @@ namespace ft {
 
 				if (_rbtree == nullptr)
 					return (*this);
-				_ptr = _rbtree->inorderSuccessor(_ptr);
+				++(*this);
 				return (tmp);
 			}
 
@@ -176,10 +177,7 @@ namespace ft {
 
 				if (_rbtree == nullptr)
 					return (*this);
-				if (_ptr == nullptr)
-					_ptr = _rbtree->max(_rbtree->getRoot());
-				else
-					_ptr = _rbtree->inorderPredecessor(_ptr);
+				--(*this);
 				return (tmp);
 			}
 
@@ -231,8 +229,7 @@ namespace ft {
 			rbt_reverse_iterator(): _ptr(iterator_type()){
 				return ;
 			}
-			explicit	rbt_reverse_iterator (iterator_type it) {
-				_ptr = --it;
+			explicit	rbt_reverse_iterator (iterator_type it): _ptr(--it) {
 				return ;
 			}
 			template <class Iter>
@@ -306,9 +303,7 @@ namespace ft {
 
 			node_pointer	_destroy(node_pointer node) {
 				if (node != nullptr) {
-					node->left = _destroy(node->left);
-					node->right = _destroy(node->right);
-					_node_allocator.destroy(node);
+					allocator_type().destroy(node->data);
 					_node_allocator.deallocate(node, 1);
 				}
 				return (nullptr);
@@ -334,12 +329,14 @@ namespace ft {
 							node = _destroy(node);
 							return ;
 						}
+						// _destroy(node);
 						_removeFix(node);
-						// node->left = _destroy(node->left);
-						// node->right = _destroy(node->right);
-						// _node_allocator.destroy(&(*node));
-						// _node_allocator.deallocate(&(*node), 1);
-						node = nullptr;
+						// Alloc().destroy(node->data);
+						// Alloc().deallocate(node->data, 1);
+						// node->data = nullptr;
+						// _node_allocator.destroy(node);
+						// _node_allocator.deallocate(node, 1);
+						// node = nu
 					} else { // if not get either it's predecessor or successor
 						if (node->left) {
 							node_pointer pre = inorderPredecessor(node);
@@ -664,13 +661,17 @@ namespace ft {
 					return (node);
 				}
 				_insertFix(node);
-				return (node);
+				return (_find(_root, data.first));
 			}
 			size_type		remove(const key_type& data) {
 				node_pointer node = _find(_root, data);
 
 				if (node != nullptr) {
 					_remove(_root, node);
+					_node_allocator.destroy(node);
+					_node_allocator.deallocate(node, 1);
+					node = nullptr;
+					_size--;
 					return (1);
 				}
 				return (0);
@@ -731,6 +732,11 @@ namespace ft {
 				if (_root == nullptr)
 					return ;
 				print_helper("", _root, false);
+			}
+			void	swap(red_black_tree &x) {
+				std::swap(_root, x._root);
+				std::swap(_compare, x._compare);
+				std::swap(_node_allocator, x._node_allocator);
 			}
 	};
 }
