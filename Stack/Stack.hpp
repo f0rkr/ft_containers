@@ -13,7 +13,7 @@
 #ifndef STACK_HPP
 # define STACK_HPP
 
-# include "Vector.hpp"
+# include "../Vector/Vector.hpp"
 
 namespace ft {
 	/** Stack template
@@ -26,12 +26,10 @@ namespace ft {
 	 ** elements are stored. It's value_type shall be T.
 	 ** Aliased as member type stack::container_type.
 	*/
-	template <class T, class Container = ft::Vector<T, class   = allocator<T> >>>
+	template <class T, class Container = ft::Vector<T> >
 			class Stack {
-				private:
-					Container	*_cntr;
 				public:
-					/** Value type
+					/** @brief Value type
 					 * The first template parameter T
 					 * Types of the elements
 					 */
@@ -39,7 +37,7 @@ namespace ft {
 
 
 
-					/** Container type
+					/** @brief Container type
 					 * The second template parameter (Container)
 					 * Type of the underlying container
 					 */
@@ -53,8 +51,11 @@ namespace ft {
 					  */
 					 typedef size_t			size_type;
 
+				protected:
+					container_type _cntr;
 
-					 /** Construct stack
+				public:
+					 /** @brief Construct stack
 					  * Constructs a stack container adaptor object
 					  *
 					  * A container adaptor keeps internally a container object as data. This
@@ -66,7 +67,9 @@ namespace ft {
 					  * as an alias of the second class template parameter, Container)
 					  * @return none
 					  */
-					 explicit	Stack (const container_type& ctnr = container_type());
+					 explicit	Stack (const container_type& ctnr = container_type()): _cntr(ctnr) {
+						 return ;
+					 }
 
 
 					 /* -------------------- Member functions -------------------- */
@@ -81,7 +84,7 @@ namespace ft {
 					  * @param none
 					  * @return true if the underlying container's size is 0, false otherwise
 					  */
-					 bool 		empty() const {return ((this->_cntr->size() == 0 ? true : false))}
+					 bool 		empty() const {return (_cntr.size() == 0);}
 
 
 
@@ -94,7 +97,7 @@ namespace ft {
 					  * @return The number of elements in the underlying container.
 					  * Member type size_type is an unsigned integral type.
 					  */
-					 size_type	size() const {return (this->_cntr->size())}
+					 size_type	size() const {return (_cntr.size());}
 
 
 
@@ -111,8 +114,8 @@ namespace ft {
 					  * Member type value_type is the type of the elements in the container (defined as an alias of the
 					  * class template parameter, T)
 					  */
-					 value_type&		top() {return (this->_cntr->back())};
-					 const value_type&	top() const {return (this->_cntr->back())};
+					 value_type&		top() {return (_cntr.back());}
+					 const value_type&	top() const {return (_cntr.back());}
 
 
 
@@ -129,7 +132,7 @@ namespace ft {
 					  * first class template parameter, T)
 					  * @return none
 					  */
-					 void 				push (const value_type& val) {this->_cntr->push_back(val)};
+					 void 				push (const value_type& val) {_cntr.push_back(val);}
 
 
 
@@ -147,34 +150,37 @@ namespace ft {
 					  * @param none
 					  * @return none
 					  */
-					 void 				pop(this->_cntr->pop_back());
+					 void 				pop() {_cntr.pop_back();}
+
+					/** Relation operators for stack
+					* Performs the appropriate comparison operation between lhs and rhs
+					* Each of these operator overloads calls the same operator on the
+					* underlying container objects
+					*
+					* @tparam T
+					* @tparam Container
+					* @param lhs, rhs Stack objects (to the left- and right-hand size of the operator, respectively).
+					* @return true if the condition holds, and false otherwise
+					*/
+					template <class V, class U>
+						friend bool operator== (const Stack<V, U>& lhs, const Stack<V, U>& rhs) {return (lhs._cntr == rhs._cntr);}
+					template <class V, class U>
+						friend bool operator!= (const Stack<V, U>& lhs, const Stack<V, U>& rhs) {return (lhs._cntr != rhs._cntr);}
+					template <class V, class U>
+						friend bool operator< (const Stack<V, U>& lhs, const Stack<V, U>& rhs) {return (lhs._cntr < rhs._cntr);}
+					template <class V, class U>
+						friend bool operator<= (const Stack<V, U>& lhs, const Stack<V, U>& rhs) {return (lhs._cntr <= rhs._cntr);}
+					template <class V, class U>
+						friend bool operator> (const Stack<V, U>& lhs, const Stack<V, U>& rhs) { return (lhs._cntr > rhs._cntr);}
+					template <class V, class U>
+						friend bool operator>= (const Stack<V, U>& lhs, const Stack<V, U>& rhs) {return (lhs._cntr >= rhs._cntr);}
 			};
 
 			/* -------------------- Non-member function overload -------------------- */
 
 
-			/** Relation operators for stack
-			 * Performs the appropriate comparison operation between lhs and rhs
-			 * Each of these operator overloads calls the same operator on the
-			 * underlying container objects
-			 *
-			 * @tparam T
-			 * @tparam Container
-			 * @param lhs, rhs Stack objects (to the left- and right-hand size of the operator, respectively).
-			 * @return true if the condition holds, and false otherwise
-			 */
-			template <class T, class Container>>
-					bool 	operator==	(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-			template <class T, class Container>>
-					bool	operator!=	(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-			template <class T, class Container>>
-					bool	operator<	(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-			template <class T, class Container>>
-					bool	operator<=	(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-			template <class T, class Container>>
-					bool 	operator>	(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-			template <class T, class Container>>
-					bool 	operator>=	(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
+
+
 
 
 }

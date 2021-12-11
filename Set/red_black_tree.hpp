@@ -17,12 +17,11 @@
 # include <iostream>
 # include "../Vector/iterator_traits.hpp"
 
-
 namespace ft {
 	enum Color	{RED=1, BLACK=0, DBLACK=2};
-	template <class Pair, class Alloc>
+	template <class T, class Alloc>
 	struct Node {
-		typedef	Pair			value_type;
+		typedef	T				value_type;
 		typedef value_type*		pointer;
 		typedef value_type&		reference;
 		typedef Alloc			allocator_type;
@@ -96,10 +95,10 @@ namespace ft {
 			return NULL;
 		}
 	};
-	template <class Pair, class node,  class Tree>
+	template <class T, class node,  class Tree>
 	class rbt_iterator {
 		public:
-			typedef Pair							value_type;
+			typedef T								value_type;
 			typedef value_type*						pointer;
 			typedef value_type&						reference;
 			typedef node							node_type;
@@ -107,7 +106,7 @@ namespace ft {
 			typedef tree_type*						tree_pointer;
 			typedef node_type*						node_pointer;
 
-			typedef std::bidirectional_iterator_tag	iterator_category;
+			typedef typename std::bidirectional_iterator_tag	iterator_category;
 
 		private:
 			node_pointer	_ptr;
@@ -270,23 +269,24 @@ namespace ft {
 			iterator_type	_ptr;
 	};
 
-	template <class Pair, class Compare, typename Alloc>
+	template <class T, class Compare, typename Alloc>
 	class red_black_tree {
 		public:
-			typedef typename Pair::first_type		key_type;
-			typedef Pair							value_type;
+			typedef T								value_type;
 			typedef Compare							key_compare;
 			typedef ft::Node<value_type, Alloc>		node_type;
 			typedef node_type*						node_pointer;
 			typedef Alloc							allocator_type;
 			typedef size_t 							size_type;
 
-			typedef typename allocator_type::template rebind<node_type>::other	node_allocator;
-			typedef ft::rbt_iterator<value_type, node_type, red_black_tree>		iterator;
-			typedef ft::rbt_iterator<const value_type, node_type, red_black_tree>	const_iterator;
+			typedef ft::rbt_iterator<value_type, node_type, red_black_tree>						iterator;
+			typedef ft::rbt_iterator<const value_type, node_type, red_black_tree>				const_iterator;
 			typedef ft::rbt_reverse_iterator<iterator>											reverse_iterator;
 			typedef ft::rbt_reverse_iterator<const_iterator>									const_reverse_iterator;
 
+			typedef typename allocator_type::template rebind<node_type>::other					node_allocator;
+			
+			
 			node_pointer	create_node(const value_type& pair) {
 				node_pointer node = _node_allocator.allocate(1);
 				_node_allocator.construct(node, pair);
@@ -328,10 +328,10 @@ namespace ft {
 			node_type*		_insert(node_pointer &root, node_pointer &node) {
 				if (root == nullptr)
 					return (node);
-				if (_compare(node->data->first, root->data->first)) {
+				if (_compare(*node->data, *root->data)) {
 					root->left = _insert(root->left, node);
 					root->left->parent = root;
-				} else if (_compare(root->data->first, node->data->first)){
+				} else if (_compare(*root->data, *node->data)){
 					root->right = _insert(root->right, node);
 					root->right->parent = root;
 				}
@@ -340,7 +340,7 @@ namespace ft {
 			void 			_remove(node_type *&root, node_type *&node) {
 				if (node == nullptr)
 					return ;
-				if (root && !_compare(root->data->first, node->data->first) && !_compare(node->data->first, root->data->first)) {
+				if (root && !_compare(*root->data, *node->data) && !_compare(*node->data, *root->data)) {
 					if (!(node->left) && !(node->right)) { // if node has no children then simply delete it
 						if (node == _root) {
 							_destroyNode(node);
@@ -365,9 +365,9 @@ namespace ft {
 					}
 					return ;
 				}
-				if (_compare(root->data->first, node->data->first))
+				if (_compare(*root->data, *node->data))
 					_remove(root->right, node);
-				else if (_compare(node->data->first, root->data->first))
+				else if (_compare(*node->data, *root->data))
 					_remove(root->left, node);
 				return ;
 			}
@@ -514,12 +514,12 @@ namespace ft {
 				}
 			}
 
-			node_pointer	_find(node_pointer root, const key_type& data) const {
+			node_pointer	_find(node_pointer root, const value_type& data) const {
 				if (root == nullptr)
 					return (nullptr);
-				else if (_compare(root->data->first, data))
+				else if (_compare(*root->data, data))
 					return (_find(root->right, data));
-				else if (_compare(data, root->data->first))
+				else if (_compare(data, *root->data))
 					return (_find(root->left, data));
 				return (root);
 			}
@@ -538,7 +538,7 @@ namespace ft {
 				}
 			}
 		public:
-			red_black_tree(): _root(nullptr), _size(0), _node_allocator(node_allocator()), _compare(key_compare()) {
+			red_black_tree(const key_compare& comp = key_compare()) : _root(nullptr), _size(0), _node_allocator(node_allocator()), _compare(comp) {
 				return ;
 			}
 
@@ -673,7 +673,7 @@ namespace ft {
 				node->parent = leftChild;
 			}
 			node_pointer	insert(const value_type& data) {
-				node_pointer node = _find(_root, data.first);
+				node_pointer node = _find(_root, data);
 
 				if (node != nullptr)
 					return (node);
@@ -688,9 +688,9 @@ namespace ft {
 					return (node);
 				}
 				_insertFix(node);
-				return (_find(_root, data.first));
+				return (_find(_root, data));
 			}
-			size_type		remove(const key_type& data) {
+			size_type		remove(const value_type& data) {
 				node_pointer node = _find(_root, data);
 
 				if (node != nullptr) {
@@ -701,7 +701,7 @@ namespace ft {
 				return (0);
 			}
 
-			node_pointer	find(const key_type& data) const {
+			node_pointer	find(const value_type& data) const {
 				return (_find(_root, data));
 			}
 			iterator		begin() {
@@ -728,33 +728,19 @@ namespace ft {
 			const_reverse_iterator rend() const {
 				return (const_reverse_iterator(begin()));
 			}
-			iterator findSuccessor(const key_type& k) {
+			iterator findSuccessor(const value_type& k) const{
 				node_pointer successor = nullptr;
 				node_pointer root = _root;
 
 				while (root != nullptr) {
-					if (_compare(k, root->data->first)) {
+					if (_compare(k, *root->data)) {
 						successor = root;
 						root = root->left;
 					}
-					else if (!_compare(k, root->data->first))
+					else if (!_compare(k, *root->data))
 						root = root->right;
 				}
 				return (iterator(successor, this));
-			}
-			const_iterator findSuccessor(const key_type& k) const {
-				node_pointer successor = nullptr;
-				node_pointer root = _root;
-
-				while (root != nullptr) {
-					if (_compare(k, root->data->first)) {
-						successor = root;
-						root = root->left;
-					}
-					else if (!_compare(k, root->data->first))
-						root = root->right;
-				}
-				return (const_iterator(successor, this));
 			}
 			void print_helper(const std::string &prefix, const node_pointer node, bool isLeft)
 			{
@@ -765,7 +751,7 @@ namespace ft {
 					std::cout << (isLeft ? "├──" : "└──");
 
 					// print the value of the node
-					std::cout << node->data->first << " ";
+					std::cout << node->data << " ";
 
 					if (node == this->_root)
 						std::cout << "(Root)" << std::endl;

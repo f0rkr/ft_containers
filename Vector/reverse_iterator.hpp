@@ -114,10 +114,13 @@ namespace ft {
 			 */
 			template <class Iter>
 					reverse_iterator (const reverse_iterator<Iter>& rev_it) {
-						_ptr = rev_it.base();
+						_ptr = --(rev_it.base());
 					}
 
-
+			reverse_iterator &operator=(const reverse_iterator& rev_it) {
+				this->_ptr = rev_it._ptr;
+				return (*this);
+			}
 
 			/** @brief Return base iterator
 			 * Returns a copy of the base iterator.

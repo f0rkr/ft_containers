@@ -14,11 +14,11 @@
 #define MAP_HPP
 
 # include <iostream>
-# include "pair.hpp"
+# include "../Vector/Vector.hpp"
+# include "../utils/pair.hpp"
+
 # include "red_black_tree.hpp"
-# include <iterator>
-# include "../Vector/reverse_iterator.hpp"
-// # include "../Vector/Vector.hpp"
+
 namespace ft {
 	template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 	class Map {
@@ -47,8 +47,8 @@ namespace ft {
 		// Red black tree
 		typedef ft::red_black_tree<value_type, Compare, Alloc>								tree_type;
 		// Iterators
-		typedef ft::rbt_iterator<value_type, node_type, tree_type>				iterator;
-		typedef ft::rbt_iterator<const value_type, node_type, tree_type >	const_iterator;
+		typedef ft::rbt_iterator<value_type, node_type, tree_type>					iterator;
+		typedef ft::rbt_iterator<const value_type, node_type, tree_type >			const_iterator;
 		typedef ft::rbt_reverse_iterator<iterator>									reverse_iterator;
 		typedef ft::rbt_reverse_iterator<const_iterator>							const_reverse_iterator;
 
@@ -168,10 +168,10 @@ namespace ft {
 			return (_rbtree.remove(k));
 		}
 		void 	erase (iterator first, iterator last) {
-			std::vector<key_type> keys;
+			ft::Vector<key_type> keys;
 			for(iterator it = first; it != last; ++it)
 				keys.push_back(it->first);
-			for (typename std::vector<key_type>::iterator it = keys.begin(); it != keys.end(); ++it)
+			for (typename ft::Vector<key_type>::iterator it = keys.begin(); it != keys.end(); ++it)
 				_rbtree.remove(*it);
 		}
 
@@ -247,29 +247,29 @@ namespace ft {
 			_rbtree.print();
 		}
 	};
-	template<class lhit, class rhit>
-	bool equal(lhit first1, lhit last1, rhit first2)
-	{
-		while (first1 != last1) {
-		  if (!(*first1 == *first2))
-		    return false;
-		  ++first1; ++first2;
-		}
-		return true;
-	}
-	template <class InputIterator1, class InputIterator2>
-  	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
-                                InputIterator2 first2, InputIterator2 last2){
-		while (first1!=last1)
-		{
-		  if (first2==last2 || *first2<*first1)
-			  return false;
-		  else if (*first1<*first2)
-			  return true;
-		  ++first1; ++first2;
-		}
-		return (first2!=last2);
-	}
+	// template<class lhit, class rhit>
+	// bool equal(lhit first1, lhit last1, rhit first2)
+	// {
+	// 	while (first1 != last1) {
+	// 	  if (!(*first1 == *first2))
+	// 	    return false;
+	// 	  ++first1; ++first2;
+	// 	}
+	// 	return true;
+	// }
+	// template <class InputIterator1, class InputIterator2>
+  	// bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+    //                             InputIterator2 first2, InputIterator2 last2){
+	// 	while (first1!=last1)
+	// 	{
+	// 	  if (first2==last2 || *first2<*first1)
+	// 		  return false;
+	// 	  else if (*first1<*first2)
+	// 		  return true;
+	// 	  ++first1; ++first2;
+	// 	}
+	// 	return (first2!=last2);
+	// }
 		template <class Key, class T, class Compare, class Alloc>
 	bool operator== ( const ft::Map<Key,T,Compare,Alloc>& lhs,
 						const ft::Map<Key,T,Compare,Alloc>& rhs ) {
